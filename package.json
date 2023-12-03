@@ -1,0 +1,13 @@
+{
+  "name": "assignmentchecker",
+  "module": "src/index.ts",
+  "scripts": {
+    "export": "bun build ./src/index.ts --outdir=dist"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
