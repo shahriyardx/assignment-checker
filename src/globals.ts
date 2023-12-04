@@ -1,4 +1,4 @@
 export const config = {
-    setLoader: false,
-    showLoader: false,
+  setLoader: false,
+  showLoader: false,
 }

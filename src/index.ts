@@ -1,3 +1,3 @@
-import { registerKeyboardEvents } from "./events";
+import { registerKeyboardEvents } from "./events"
 
 registerKeyboardEvents()

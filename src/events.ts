@@ -1,5 +1,4 @@
-import { showJsonLoader } from "./html"
-import { enableJsonLoader } from "./loader"
+import { enableJsonLoader, showJsonLoader } from "./loader"
 import { config } from "./globals"
 import { showFeedbackBuilder } from "./feedback"
 
