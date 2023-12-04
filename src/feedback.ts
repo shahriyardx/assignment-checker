@@ -18,7 +18,6 @@ type Section = {
 }
 
 const feedbackFooter = `
-
   <strong>Important Instructions:</strong> 
   → Do not post on Facebook, if you have any marks-related issues.
   → Make sure to read all the requirements carefully, If you have any marks-related confusion.

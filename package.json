@@ -2,7 +2,7 @@
   "name": "assignmentchecker",
   "module": "src/index.ts",
   "scripts": {
-    "export": "bun build ./src/index.ts --outdir=dist"
+    "export": "bun build ./src/index.ts --outdir=dist && cp ./src/assets/* ./dist/"
   },
   "devDependencies": {
     "bun-types": "latest"

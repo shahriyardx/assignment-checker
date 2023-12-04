@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment Checker</title>
+  </head>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      vertical-align: baseline;
+    }
+
+    kbd {
+      background-color: black;
+      border-radius: 8px;
+      color: white;
+      padding: 2px 5px;
+    }
+  </style>
+  <body style="padding: 10px">
+    <div class="feedback-box p-3 mx-4 box-shadow"></div>
+    <div id="json-loader"></div>
+  
+    <div style="min-width: 300px; height: 200px">
+      <h2>How to use</h2>
+
+      <ul
+        style="
+          font-size: 18px;
+          margin-top: 20px;
+          margin-left: 0;
+          padding-left: 0;
+          list-style: none;
+        "
+      >
+        <li>Press <kbd>]</kbd> to open feedback inside assignment</li>
+        <li style="margin-top: 8px">
+          Press <kbd>shift + |</kbd> to load new json
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
