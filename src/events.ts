@@ -6,14 +6,11 @@ const handleKeyDown = (event: KeyboardEvent) => {
   console.log("Pressed", event.key)
 
   if (event.key == "|") {
-    config.setLoader = !config.showLoader
-
     showJsonLoader()
     enableJsonLoader()
   }
 
   if (event.key == "]") {
-    config.showLoader = true
     showFeedbackBuilder()
   }
 }
