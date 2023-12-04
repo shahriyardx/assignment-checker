@@ -20,7 +20,7 @@ type Section = {
 const createSubrequirement = (
   requirements: SubRequirement[],
   reqIndex: number,
-  sectionIndex: number,
+  sectionIndex: number
 ) => {
   const reqContainer = document.createElement("div")
   reqContainer.classList.add("sub-requirement-container")
@@ -61,7 +61,7 @@ const createSubrequirement = (
 const createRequirement = (
   requirement: Requirement,
   reqIndex: number,
-  sectionIndex: number,
+  sectionIndex: number
 ) => {
   const reqContainer = document.createElement("div")
   reqContainer.classList.add("single-requirement-container")
@@ -94,7 +94,7 @@ const createRequirement = (
   const subRequirements = createSubrequirement(
     requirement.subRequirements,
     reqIndex,
-    sectionIndex,
+    sectionIndex
   )
 
   if (subRequirements) {
@@ -124,7 +124,7 @@ const createSection = (section: Section, sectionIndex: number) => {
     const reqContainer = createRequirement(
       req,
       parseInt(reqIndex),
-      sectionIndex,
+      sectionIndex
     )
     requirementsContainer.appendChild(reqContainer)
   }
@@ -135,14 +135,14 @@ const createSection = (section: Section, sectionIndex: number) => {
 
 const getJsonData = () => {
   const jsonData = JSON.parse(
-    localStorage.getItem("assignment-data") as string,
+    localStorage.getItem("assignment-data") as string
   ) as { [key: string]: object }
 
   const sections: Section[] = []
 
   for (const sectionName in jsonData) {
     const requirements: Requirement[] = Object.values(
-      jsonData[sectionName],
+      jsonData[sectionName]
     ).map((requirement) => {
       const subreqs: SubRequirement[] = []
       for (const key in requirement) {
@@ -193,7 +193,7 @@ const insertFeedback = () => {
       globalIndex += 1
       const req = section.requirements[reqIndex]
       const reqCorrect = getInputChecked(
-        `${parseInt(sectionIndex)}_${parseInt(reqIndex)}`,
+        `${parseInt(sectionIndex)}_${parseInt(reqIndex)}`
       )
 
       if (!reqCorrect) {
@@ -208,8 +208,8 @@ const insertFeedback = () => {
           const subReq = req.subRequirements[subReqIndex]
           const subReqCorrect = getInputChecked(
             `${parseInt(sectionIndex)}_${parseInt(reqIndex)}_${parseInt(
-              subReqIndex,
-            )}`,
+              subReqIndex
+            )}`
           )
 
           if (!subReqCorrect) {
@@ -246,20 +246,20 @@ export const showFeedbackBuilder = () => {
   feedbackBuilder.style.padding = "20px"
   feedbackBuilder.style.borderRadius = "20px"
 
-  const insertButton = document.createElement("button")
-  insertButton.textContent = "Insert"
-  insertButton.addEventListener("click", insertFeedback)
-
-  feedbackBuilder.appendChild(insertButton)
-
   for (const sectionIndex in data.sections) {
     const section = data.sections[sectionIndex]
     const sectionHtml = createSection(section, parseInt(sectionIndex))
     feedbackBuilder.appendChild(sectionHtml)
   }
 
+  const insertButton = document.createElement("button")
+  insertButton.textContent = "Insert"
+  insertButton.addEventListener("click", insertFeedback)
+
+  feedbackBuilder.appendChild(insertButton)
+
   feedbackBox?.insertBefore(
     feedbackBuilder,
-    feedbackBox.querySelector("form") as HTMLElement,
+    feedbackBox.querySelector("form") as HTMLElement
   )
 }
