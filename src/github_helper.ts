@@ -31,27 +31,19 @@ export const getRepos = (content: string = fakeContent) => {
 
   return matches
 }
-const getGithubToken = () => {
-  const token = localStorage.getItem("github_token")
-  if (!token) {
-    throw new Error("github token is not set")
-  }
 
-  return token
-}
-
-async function getGitHubRepoInfo(repo: Repo) {
+async function getGitHubRepoInfo(repo: Repo, token: string) {
   const apiUrl = `https://api.github.com/repos/${repo.owner}/${repo.repoName}`
 
   const repoResponse = await fetch(apiUrl, {
     headers: {
-      Authorization: `Bearer ${getGithubToken()}`,
+      Authorization: `Bearer ${token}`,
     },
   })
 
   const commitResponse = await fetch(`${apiUrl}/commits`, {
     headers: {
-      Authorization: `Bearer ${getGithubToken()}`,
+      Authorization: `Bearer ${token}`,
     },
   })
 
@@ -89,7 +81,7 @@ export const getStats = async (repos: Repo[], token: string) => {
     for (let repo of repos) {
       stats.push({
         ...repo,
-        stats: await getGitHubRepoInfo(repo),
+        stats: await getGitHubRepoInfo(repo, token),
       })
     }
   } catch (error) {
