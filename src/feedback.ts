@@ -1,3 +1,5 @@
+import { JsonData } from "./types"
+
 interface BaseRequirement {
   description: string
   number: string
@@ -150,11 +152,12 @@ const createSection = (section: Section, sectionIndex: number) => {
 }
 
 const getJsonData = () => {
-  const jsonData = JSON.parse(
+  const jsonDataLocal = JSON.parse(
     localStorage.getItem("assignment-data") as string
-  ) as { [key: string]: object }
+  ) as JsonData & { data: { [key: string]: object } }
+  const jsonData = jsonDataLocal.data
 
-  const sections: Section[] = []
+  const sections = []
 
   for (const sectionName in jsonData) {
     const requirements: Requirement[] = Object.values(
@@ -271,7 +274,9 @@ const insertFeedback = () => {
   }
 
   const numPercent = (marks / 60) * 100
-  const obtainedMarkCeiled = Math.ceil(Number((submittedMark / 100) * numPercent))
+  const obtainedMarkCeiled = Math.ceil(
+    Number((submittedMark / 100) * numPercent)
+  )
   const obtainedMark = Math.min(obtainedMarkCeiled, submittedMark)
 
   const textArea = document.querySelector(".ql-editor p")
