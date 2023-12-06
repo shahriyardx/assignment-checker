@@ -2,7 +2,9 @@
   "name": "assignmentchecker",
   "module": "src/index.ts",
   "scripts": {
-    "export": "bun build ./src/index.ts --outdir=dist && cp ./src/assets/* ./dist/"
+    "export": "rm -rf ./dist && rm -rf ./assignment-checker && bun build ./src/index.ts --outdir=dist && cp ./src/assets/* ./dist/",
+    "publish": "cp -r ./dist ./assignment-checker && zip -r ./dist/assignment-checker.zip ./assignment-checker && rm -rf ./assignment-checker",
+    "ep": "bun run export && bun run publish"
   },
   "devDependencies": {
     "bun-types": "latest"
