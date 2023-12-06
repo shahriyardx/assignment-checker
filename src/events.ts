@@ -1,5 +1,6 @@
 import { enableJsonLoader, showJsonLoader } from "./loader"
 import { showFeedbackBuilder } from "./feedback"
+import { showGithubStats } from "./github"
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key == "|") {
@@ -9,6 +10,10 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
   if (event.key == "]") {
     showFeedbackBuilder()
+  }
+
+  if (event.key == "[") {
+    showGithubStats()
   }
 }
 
