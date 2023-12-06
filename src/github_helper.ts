@@ -71,10 +71,10 @@ async function getGitHubRepoInfo(repo: Repo) {
       ampm = "AM"
     }
 
-    lastCommitDate = `${commitDate.getDate()}/${commitDate.toLocaleString(
+    lastCommitDate = `${commitDate.getDate()} ${commitDate.toLocaleString(
       "default",
       { month: "short" }
-    )}/${commitDate.getFullYear()} - ${commitHour}:${commitDate.getMinutes()} ${ampm}`
+    )}, ${commitDate.getFullYear()} - ${commitHour}:${commitDate.getMinutes()} ${ampm}`
   }
 
   return {
