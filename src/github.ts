@@ -19,7 +19,7 @@ export const showGithubStats = async () => {
     github_container.style.display = "flex"
     github_container.style.flexDirection = "column"
     github_container.style.gap = "10px"
-    github_container.style.paddingInline = "15px"
+    github_container.style.paddingInline = "30px"
     github_container.innerText = "Loadig data..."
   } else {
     github_container.innerHTML = ""
