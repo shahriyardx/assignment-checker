@@ -237,9 +237,9 @@ const insertFeedback = () => {
             allSubOk = false
             marks -= Number(subReq.number)
             console.log(subReq.number, marks)
-            subReqMsg += `&emsp;&emsp;&emsp;&emsp;&emsp;${subReq.description} ${notOKay}\n`
+            subReqMsg += `&emsp;&emsp;&emsp;&emsp;• ${subReq.description} ${notOKay}\n`
           } else {
-            subReqMsg += `&emsp;&emsp;&emsp;&emsp;&emsp;${subReq.description} → okay\n`
+            subReqMsg += `&emsp;&emsp;&emsp;&emsp;• ${subReq.description} → okay\n`
           }
         }
 
