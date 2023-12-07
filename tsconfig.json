@@ -4,6 +4,8 @@
     "lib": ["dom", "ESNext"],
     "outDir": "./dist",
     "strict": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

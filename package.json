@@ -1,14 +1,16 @@
 {
   "name": "assignmentchecker",
   "module": "src/index.ts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "export": "rm -rf ./dist && rm -rf ./assignment-checker && bun build ./src/index.ts --outdir=dist && cp -r ./src/assets/ ./dist",
     "publish": "cp -r ./dist ./assignment-checker && zip -r ./dist/assignment-checker.zip ./assignment-checker && rm -rf ./assignment-checker",
     "ep": "bun run export && bun run publish"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@types/semver": "^7.5.6",
+    "bun-types": "latest",
+    "semver": "^7.5.4"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

@@ -1,8 +1,10 @@
 {
   "name": "Phero Assignment Checker",
   "description": "Modified extension for Phero assignment checking",
-  "version": "0.0.4",
-  "permissions": ["activeTab"],
+  "version": "0.0.5",
+  "permissions": [
+    "activeTab"
+  ],
   "action": {
     "default_icon": "icons/icon32.png",
     "default_popup": "index.html"
@@ -15,8 +17,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://web.programming-hero.com/*"],
-      "js": ["./index.js"]
+      "matches": [
+        "https://web.programming-hero.com/*"
+      ],
+      "js": [
+        "./index.js"
+      ]
     }
   ],
   "manifest_version": 3
