@@ -1,7 +1,7 @@
 {
   "name": "assignmentchecker",
   "module": "src/index.ts",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "export": "rm -rf ./dist && rm -rf ./assignment-checker && bun build ./src/index.ts --outdir=dist && cp -r ./src/assets/ ./dist",
     "publish": "cp -r ./dist ./assignment-checker && zip -r ./dist/assignment-checker.zip ./assignment-checker && rm -rf ./assignment-checker",
