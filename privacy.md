@@ -7,9 +7,9 @@ Welcome to `Phero Assignment Checker`. We are committed to protecting your priva
 ### Information We Collect
 **Browser Permissions:** This extension may request specific permissions, such as the activeTab permission, to enhance its functionality. These permissions are used exclusively for the purposes outlined in our extension's features
 
-**Usage Data:** This extension does not collect any user private or public data
+**Usage Data:** This extension does not collect any personal information of the user using this extension.
 
-**Extension Functionality:** The data collected, including browser permissions and usage data, is used to provide and improve the functionality of our extension, such as checking assignment submissions and providing grades.
+**Extension Functionality:** The permission `activeTab` is used to provide and improve the functionality of our extension, such as checking assignment submissions and providing grades.
 
 ### Data Sharing
 We do not sell, trade, or otherwise transfer your personal information to third parties. We don't even collect any personal information in the first place.
