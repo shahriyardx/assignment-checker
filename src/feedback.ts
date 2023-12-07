@@ -196,7 +196,7 @@ const getInputChecked = (id: string) => {
   return input?.checked
 }
 
-const notOKay = "-> <em>not okay</em>"
+const notOKay = "<em style='color:red;'>→ not okay</em>"
 const insertFeedback = () => {
   const sections = getJsonData().sections
   console.log(sections)
@@ -237,16 +237,16 @@ const insertFeedback = () => {
             allSubOk = false
             marks -= Number(subReq.number)
             console.log(subReq.number, marks)
-            subReqMsg += `\t-> ${subReq.description} ${notOKay}\n`
+            subReqMsg += `&emsp;&emsp;&emsp;&emsp;&emsp;${subReq.description} ${notOKay}\n`
           } else {
-            subReqMsg += `\t-> ${subReq.description} -> okay\n`
+            subReqMsg += `&emsp;&emsp;&emsp;&emsp;&emsp;${subReq.description} → okay\n`
           }
         }
 
         if (!allSubOk) {
           reqMsg += "\n" + subReqMsg
         } else {
-          reqMsg += ` -> okay\n`
+          reqMsg += ` → okay\n`
         }
 
         feedback += reqMsg
