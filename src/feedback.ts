@@ -151,7 +151,7 @@ const createSection = (section: Section, sectionIndex: number) => {
   return sectionContainer
 }
 
-const getJsonData = () => {
+const getJsonDataLegacy = () => {
   const jsonDataLocal = JSON.parse(
     localStorage.getItem("assignment-data") as string
   ) as JsonData & { data: { [key: string]: object } }
@@ -189,6 +189,19 @@ const getJsonData = () => {
   }
 
   return { sections: sections }
+}
+
+const getJsonData = () => {
+  const jsonDataLocal = JSON.parse(
+    localStorage.getItem("assignment-data") as string
+  )
+
+  const jsonData = jsonDataLocal.data
+  if (jsonData.type == "new") {
+    return jsonData as { sections: Section[] }
+  }
+
+  return getJsonDataLegacy()
 }
 
 const getInputChecked = (id: string) => {
