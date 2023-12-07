@@ -17,19 +17,9 @@ export const showJsonLoader = () => {
   const assignmentModal = evalForm ? evalForm.parentElement : null
 
   if (!loaderContainer) return
-  let importer
-
-  if (assignmentModal) {
-    importer = assignmentModal.querySelector("#json-importer")
-  } else {
-    importer = loaderContainer.querySelector("#json-importer")
-  }
-
-  if (importer) {
-    return assignmentModal
-      ? assignmentModal.removeChild(importer)
-      : loaderContainer.removeChild(importer)
-  }
+  
+  const importer = document.querySelector("#json-importer")
+  if (importer) importer.remove()
 
   const div = document.createElement("div")
   div.id = "json-importer"
