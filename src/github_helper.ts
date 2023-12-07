@@ -41,13 +41,15 @@ async function getGitHubRepoInfo(repo: Repo, token: string) {
     },
   })
 
-  const commitResponse = await fetch(`${apiUrl}/commits`, {
+  const commitResponse = await fetch(`${apiUrl}/commits?per_page=1&page=1`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   })
+  const link = commitResponse.headers.get("link") as string
+  const pageRegex = /page=(\d+)>; rel="last"/
+  const match = link.match(pageRegex)
 
-  const commitData = await commitResponse.json()
   const repoData = await repoResponse.json()
 
   let lastCommitDate
@@ -71,7 +73,7 @@ async function getGitHubRepoInfo(repo: Repo, token: string) {
 
   return {
     lastCommitDate,
-    commits: commitData.length,
+    commits: match ? Number(match[1]) :0,
   }
 }
 
