@@ -1,7 +1,7 @@
 {
   "name": "Phero Assignment Checker",
   "description": "Modified extension for Phero assignment checking",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "action": {
     "default_icon": "icons/icon32.png",
     "default_popup": "index.html"
