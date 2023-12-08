@@ -17,7 +17,7 @@ export const showJsonLoader = () => {
   const assignmentModal = evalForm ? evalForm.parentElement : null
 
   if (!loaderContainer) return
-  
+
   const importer = document.querySelector("#json-importer")
   if (importer) importer.remove()
 
@@ -79,7 +79,7 @@ const renderList = () => {
     title.textContent = json.filename
 
     const activeButton = getButton(
-      currentJson.filename == json.filename ? "Active" : "Activate"
+      currentJson.filename == json.filename ? "Active" : "Activate",
     )
     activeButton.style.backgroundColor =
       currentJson.filename == json.filename ? "#6807ff" : "#dddddd"

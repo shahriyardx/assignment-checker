@@ -1,11 +1,12 @@
-import { RepoWithStats, getRepos, getStats } from "./github_helper"
+import { getRepos, getStats } from "./github_helper"
+import { RepoWithStats } from "./types"
 
 export const showGithubStats = async () => {
   const evalForm = document.querySelector(".assignment-evaluation-form")
   if (!evalForm) return
 
   const assignmentData = evalForm.querySelectorAll(
-    ".row.form-group"
+    ".row.form-group",
   )[1] as HTMLElement
 
   if (!assignmentData) return

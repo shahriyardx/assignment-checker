@@ -26,7 +26,7 @@ fs.writeFile(
     } else {
       console.log(`package.json updated to ${newPackageVersion}`)
     }
-  }
+  },
 )
 
 fs.writeFile(
@@ -39,5 +39,5 @@ fs.writeFile(
     } else {
       console.log(`manifest.json updated to ${newManifestVersion}`)
     }
-  }
+  },
 )

@@ -14,12 +14,8 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://web.programming-hero.com/*"
-      ],
-      "js": [
-        "./index.js"
-      ]
+      "matches": ["https://web.programming-hero.com/*"],
+      "js": ["./index.js"]
     }
   ],
   "manifest_version": 3

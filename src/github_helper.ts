@@ -1,15 +1,4 @@
-type Repo = {
-  url: string
-  owner: string
-  repoName: string
-}
-
-export type RepoWithStats = Repo & {
-  stats: {
-    lastCommitDate: string
-    commits: number
-  }
-}
+import { Repo } from "./types"
 
 const fakeContent = `
 Assignment Category: assignment12_category_0008
@@ -67,13 +56,13 @@ async function getGitHubRepoInfo(repo: Repo, token: string) {
 
     lastCommitDate = `${commitDate.getDate()} ${commitDate.toLocaleString(
       "default",
-      { month: "short" }
+      { month: "short" },
     )}, ${commitDate.getFullYear()} - ${commitHour}:${commitDate.getMinutes()} ${ampm}`
   }
 
   return {
     lastCommitDate,
-    commits: match ? Number(match[1]) :0,
+    commits: match ? Number(match[1]) : 0,
   }
 }
 
