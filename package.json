@@ -3,7 +3,7 @@
   "module": "src/index.ts",
   "version": "0.0.9",
   "scripts": {
-    "export": "rm -rf ./dist && rm -rf ./assignment-checker && bun build ./src/index.ts --outdir=dist --minify && cp -r ./src/assets/ ./dist",
+    "export": "rm -rf ./dist && rm -rf ./assignment-checker && bun build ./src/index.ts --outdir=dist --minify && bun build ./src/background.ts --outdir=dist --minify && cp -r ./src/assets/ ./dist",
     "publish": "cp -r ./dist ./assignment-checker && zip -r ./dist/assignment-checker.zip ./assignment-checker && rm -rf ./assignment-checker",
     "upgrade": "bun run ./src/upgrade.ts",
     "ep": "bun run export && bun run publish"
@@ -15,5 +15,8 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@types/chrome": "^0.0.254"
   }
 }
