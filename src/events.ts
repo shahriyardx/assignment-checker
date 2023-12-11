@@ -16,7 +16,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 
   if (window.location.pathname == "/instructor-dashboard/my-assignment") {
-    if (event.shiftKey && event.code == "Backslash") {
+    if (event.code == "Backslash") {
       if (document.getElementById("insert-button")) {
         insertFeedback()
       }
