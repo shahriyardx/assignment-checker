@@ -35,6 +35,8 @@ const checkUpdate = async () => {
   const latestVersion = data.tag_name
   const versionInfo = data.body
 
+  chrome.storage.local.set({ latestVersion })
+
   if (currentVersion !== latestVersion) {
     sendUpdateNotification({ currentVersion, latestVersion, versionInfo })
   }
