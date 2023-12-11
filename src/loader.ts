@@ -38,6 +38,7 @@ export const showJsonLoader = () => {
   const container = assignmentModal || loaderContainer
   container.insertAdjacentElement("afterbegin", div)
   renderList()
+  enableJsonLoader()
 }
 
 const getJsons = () => {

@@ -247,7 +247,7 @@ const notOKay = (msg?: string | null) => {
   return `<em style='color:red;'>→ ${msg || "not okay"}</em>`
 }
 
-const insertFeedback = () => {
+export const insertFeedback = () => {
   const sections = getJsonData().sections
 
   let feedback = ""
@@ -341,8 +341,22 @@ const insertFeedback = () => {
     textArea.innerHTML = feedback
   }
 
-  const markBox = document.querySelector("#Mark")
+  const markBox = document.querySelector("#Mark") as HTMLInputElement
   const suggestion = document.querySelector("#markSuggestions")
+
+  markBox.focus()
+  markBox.value = String(obtainedMark)
+  markBox.addEventListener("keydown", (e) => {
+    if (e.shiftKey && e.code == "Enter") {
+      const submitButton = Array.from(document.querySelectorAll("button")).find(
+        (btn) => btn.textContent == "Submit"
+      )
+
+      if (submitButton) {
+        submitButton.click()
+      }
+    }
+  })
 
   if (suggestion) {
     suggestion.textContent = `${obtainedMark} ?`
@@ -376,6 +390,7 @@ export const showFeedbackBuilder = () => {
   }
 
   const insertButton = document.createElement("button")
+  insertButton.id = "insert-button"
   insertButton.textContent = "Insert"
   insertButton.className = "btn px-4 btn-primary w-full"
   insertButton.addEventListener("click", insertFeedback)
