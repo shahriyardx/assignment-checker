@@ -15,6 +15,47 @@ const feedbackFooter = `
   
   <b>Let's Code_ Your Career</b>
 `
+const getCustomFeedback = (uniqueId: string): [string | null, number] => {
+  const cf = document.getElementById(`${uniqueId}_custom_feedback`)
+  if (!cf) return [null, 0]
+
+  const feedback = cf.querySelector(".cf") as HTMLInputElement
+  const marks = cf.querySelector(".cn") as HTMLInputElement
+
+  return [
+    feedback ? feedback.value.trim() : null,
+    marks ? Number(marks.value) : 0,
+  ]
+}
+
+const getCustomFeedbackEl = (uniqueId: string) => {
+  const customFeedback = document.createElement("div")
+  customFeedback.id = `${uniqueId}_custom_feedback`
+  customFeedback.style.display = "none"
+  customFeedback.style.gridTemplateColumns = "1fr 1fr"
+  customFeedback.style.gap = "5px"
+  customFeedback.style.paddingInline = "12px"
+  customFeedback.style.paddingBottom = "10px"
+
+  const cfHtml = `
+    <input type="text" class="cf" placeholder="Custom Feedback">
+    <input type="number" class="cn" placeholder="Partial Marks">
+  `
+
+  customFeedback.innerHTML = cfHtml
+
+  return customFeedback
+}
+
+const showCustomFeedbackEl = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const display = target.checked ? "none" : "grid"
+
+  const cf = document.getElementById(`${target.id}_custom_feedback`)
+  if (cf) {
+    cf.style.display = display
+  }
+}
 
 const createSubrequirement = (
   requirements: SubRequirement[],
@@ -34,6 +75,8 @@ const createSubrequirement = (
     mainRequirement.style.gridTemplateColumns = "auto 20px"
 
     const uniqueId = `${sectionIndex}_${reqIndex}_${subReqIndex}`
+    const cf = getCustomFeedbackEl(uniqueId)
+
     const reqTitle = document.createElement("label")
     reqTitle.htmlFor = uniqueId
 
@@ -43,15 +86,19 @@ const createSubrequirement = (
     reqCheckInput.setAttribute("data-reqindex", uniqueId)
     reqCheckInput.setAttribute("id", uniqueId)
     reqCheckInput.setAttribute("checked", "yes")
+    reqCheckInput.addEventListener("change", (e) => showCustomFeedbackEl(e))
 
     reqCheckContainer.appendChild(reqCheckInput)
 
-    reqTitle.textContent = `${parseInt(subReqIndex) + 1}. ${subReq.description}`
+    reqTitle.textContent = `${parseInt(subReqIndex) + 1}. ${
+      subReq.description
+    } (${subReq.number})`
 
     mainRequirement.appendChild(reqTitle)
     mainRequirement.appendChild(reqCheckContainer)
 
     reqContainer.appendChild(mainRequirement)
+    reqContainer.appendChild(cf)
   }
 
   return reqContainer
@@ -71,6 +118,8 @@ const createRequirement = (
   mainRequirement.style.gridTemplateColumns = "auto 20px"
 
   const uniqueId = `${sectionIndex}_${reqIndex}`
+  const cf = getCustomFeedbackEl(uniqueId)
+
   const reqTitle = document.createElement("label")
   reqTitle.htmlFor = uniqueId
 
@@ -80,15 +129,19 @@ const createRequirement = (
   reqCheckInput.setAttribute("checked", "yes")
   reqCheckInput.setAttribute("id", uniqueId)
   reqCheckInput.setAttribute("data-reqindex", uniqueId)
+  reqCheckInput.addEventListener("change", (e) => showCustomFeedbackEl(e))
 
   reqCheckContainer.appendChild(reqCheckInput)
 
-  reqTitle.textContent = `${reqIndex + 1}. ${requirement.data.description}`
+  reqTitle.textContent = `${reqIndex + 1}. ${requirement.data.description} (${
+    requirement.data.number
+  })`
 
   mainRequirement.appendChild(reqTitle)
   mainRequirement.appendChild(reqCheckContainer)
 
   reqContainer.appendChild(mainRequirement)
+  reqContainer.appendChild(cf)
 
   const subRequirements = createSubrequirement(
     requirement.subRequirements,
@@ -190,10 +243,13 @@ const getInputChecked = (id: string) => {
   return input?.checked
 }
 
-const notOKay = "<em style='color:red;'>→ not okay</em>"
+const notOKay = (msg?: string | null) => {
+  return `<em style='color:red;'>→ ${msg || "not okay"}</em>`
+}
+
 const insertFeedback = () => {
   const sections = getJsonData().sections
-  console.log(sections)
+
   let feedback = ""
   let marks = 60
   let globalIndex = 0
@@ -206,14 +262,18 @@ const insertFeedback = () => {
     for (const reqIndex in section.requirements) {
       globalIndex += 1
       const req = section.requirements[reqIndex]
-      const reqCorrect = getInputChecked(
-        `${parseInt(sectionIndex)}_${parseInt(reqIndex)}`
-      )
+      const reqId = `${parseInt(sectionIndex)}_${parseInt(reqIndex)}`
+      const reqCorrect = getInputChecked(reqId)
 
       if (!reqCorrect) {
-        feedback += `${globalIndex}. ${req.data.description} ${notOKay}\n`
+        const [cf, cn] = getCustomFeedback(reqId)
+        if (cf) {
+          feedback += `${globalIndex}. ${req.data.description} ${notOKay(cf)}\n`
+        } else {
+          feedback += `${globalIndex}. ${req.data.description} ${notOKay()}\n`
+        }
         marks -= Number(req.data.number)
-        console.log(req.data.number, marks)
+        marks += cn
       } else {
         let reqMsg = `${globalIndex}. ${req.data.description}`
         let subReqMsg = ""
@@ -221,18 +281,22 @@ const insertFeedback = () => {
 
         for (const subReqIndex in req.subRequirements) {
           const subReq = req.subRequirements[subReqIndex]
-          const subReqCorrect = getInputChecked(
-            `${parseInt(sectionIndex)}_${parseInt(reqIndex)}_${parseInt(
-              subReqIndex
-            )}`
-          )
+          const subReqId = `${parseInt(sectionIndex)}_${parseInt(
+            reqIndex
+          )}_${parseInt(subReqIndex)}`
+
+          const subReqCorrect = getInputChecked(subReqId)
 
           if (!subReqCorrect) {
+            const [cf, cn] = getCustomFeedback(subReqId)
+
             allSubOk = false
             if (Number(subReq.number)) {
               marks -= Number(subReq.number)
+              marks += cn
             }
-            subReqMsg += ` └─ ${subReq.description} ${notOKay}\n`
+
+            subReqMsg += ` └─ ${subReq.description} ${notOKay(cf)}\n`
           }
         }
 
