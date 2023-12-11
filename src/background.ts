@@ -5,6 +5,26 @@ const getCurrentVersion = () => {
 }
 
 const checkUpdate = async () => {
+  const currentDateTime = new Date()
+  const storageData = await chrome.storage.local.get("lastUpdateCheck")
+
+  if (storageData.lastUpdateCheck) {
+    const lastDate = new Date(storageData.lastUpdateCheck).getTime()
+    const currentTime = currentDateTime.getTime()
+
+    const delta = 24 * 60 * 60 * 1000
+    const diff = currentTime - lastDate
+
+    if (diff < delta) {
+      return
+    }
+  }
+
+  console.log("Updating update check time")
+  await chrome.storage.local.set({
+    lastUpdateCheck: currentDateTime.toISOString(),
+  })
+
   const data = await (
     await fetch(
       ` https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`

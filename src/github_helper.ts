@@ -1,15 +1,6 @@
 import { Repo } from "./types"
 
-const fakeContent = `
-Assignment Category: assignment12_category_0008
-Admin email: admin@gmail.com
-Admin password:Admin$123
-Front-end Live Site Link: https://my-pet-adoption.vercel.app/
-Client Side Github Repository Link: https://github.com/programming-hero-web-course1/b8a12-client-side-csesopnil
-Server Side Github Repository Link: https://github.com/programming-hero-web-course1/b8a12-server-side-csesopnil
-`
-
-export const getRepos = (content: string = fakeContent) => {
+export const getRepos = (content: string) => {
   const githubRepoPattern = /https?:\/\/github\.com\/([^\s/]+)\/([^\s/]+)/g
   const matches: Repo[] = []
 
