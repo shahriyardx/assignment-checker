@@ -53,6 +53,8 @@ const sendUpdateNotification = ({
   const manifest = chrome.runtime.getManifest()
   const btnId = `update_${latestVersion}`
 
+  chrome.action.setBadgeText({ text: '1' })
+
   chrome.notifications.create(btnId, {
     iconUrl: "icons/icon32.png",
     title: `[Update] ${manifest.name}`,
