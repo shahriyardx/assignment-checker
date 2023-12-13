@@ -27,7 +27,7 @@ const checkUpdate = async () => {
 
   const data = await (
     await fetch(
-      ` https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`
+      ` https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`,
     )
   ).json()
 
@@ -53,7 +53,7 @@ const sendUpdateNotification = ({
   const manifest = chrome.runtime.getManifest()
   const btnId = `update_${latestVersion}`
 
-  chrome.action.setBadgeText({ text: '1' })
+  chrome.action.setBadgeText({ text: "1" })
 
   chrome.notifications.create(btnId, {
     iconUrl: "icons/icon32.png",
@@ -71,7 +71,7 @@ const sendUpdateNotification = ({
           url: `https://github.com/shahriyardx/assignment-checker/releases/tag/${latestVersion}`,
         })
       }
-    }
+    },
   )
 }
 

@@ -1,6 +1,7 @@
 import { showGithubStats } from "./github"
 import { showJsonLoader } from "./loader"
-import { insertFeedback, showFeedbackBuilder } from "./feedback"
+import { insertFeedback } from "./feedback"
+import { showFeedbackBuilder } from "./html_helper"
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.shiftKey && event.code == "Backslash") {
@@ -19,7 +20,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
     if (event.shiftKey && event.code == "KeyO") {
       if (document.querySelector(".assignment-evaluation-form")) return
       const assignment = document.querySelector(
-        ".btn.btn-icon.btn-eye-icon.btn-primary"
+        ".btn.btn-icon.btn-eye-icon.btn-primary",
       ) as HTMLButtonElement
       if (assignment) {
         assignment.click()
