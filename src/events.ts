@@ -23,6 +23,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
     }
 
     if (event.code == "KeyI") {
+      if (document.querySelector(".assignment-evaluation-form")) return
       const assignment = document.querySelector(
         ".btn.btn-icon.btn-eye-icon.btn-primary"
       ) as HTMLButtonElement
