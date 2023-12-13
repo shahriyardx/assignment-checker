@@ -11,9 +11,9 @@ This extension is a Drop-in replacement of the previous extension but with impro
 ### Workflow
 when you are one my assignment page
 
-- press `i` to open first assignment on the list
 - press `]` to open feedback panel
-- press `\` to insert the feedback and enter the marks
+- press `Shift + O` to open first assignment on the list
+- press `Shift + ]` to insert the feedback and enter the marks
 - press `Shift + Enter` to submit the assignment marks
 
 and repeat
