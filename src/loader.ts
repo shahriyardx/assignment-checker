@@ -19,7 +19,7 @@ export const showJsonLoader = () => {
   if (!loaderContainer) return
 
   const importer = document.querySelector("#json-importer")
-  if (importer) importer.remove()
+  if (importer) return importer.remove()
 
   const div = document.createElement("div")
   div.id = "json-importer"

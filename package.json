@@ -1,7 +1,7 @@
 {
   "name": "assignmentchecker",
   "module": "src/index.ts",
-  "version": "0.1.2",
+  "version": "0.1.1",
   "scripts": {
     "compile": "bun build ./src/index.ts ./src/background.ts ./src/popup.ts --outdir=dist --minify",
     "export": "rm -rf ./dist && rm -rf ./assignment-checker && bun run compile && cp -r ./src/assets/ ./dist",

@@ -3,25 +3,19 @@ import { showJsonLoader } from "./loader"
 import { insertFeedback, showFeedbackBuilder } from "./feedback"
 
 const handleKeyDown = (event: KeyboardEvent) => {
-  if (event.key == "|") {
+  if (event.shiftKey && event.code == "Backslash") {
     showJsonLoader()
   }
 
-  if (event.key == "]") {
+  if (!event.shiftKey && event.code == "BracketRight") {
     showFeedbackBuilder()
   }
 
-  if (event.key == "[") {
+  if (event.shiftKey && event.key == "BracketLeft") {
     showGithubStats()
   }
 
   if (window.location.pathname == "/instructor-dashboard/my-assignment") {
-    if (event.code == "Backslash") {
-      if (document.getElementById("insert-button")) {
-        insertFeedback()
-      }
-    }
-
     if (event.code == "KeyI") {
       if (document.querySelector(".assignment-evaluation-form")) return
       const assignment = document.querySelector(
@@ -29,6 +23,12 @@ const handleKeyDown = (event: KeyboardEvent) => {
       ) as HTMLButtonElement
       if (assignment) {
         assignment.click()
+      }
+    }
+
+    if (event.shiftKey && event.code == "BracketRight") {
+      if (document.getElementById("insert-button")) {
+        insertFeedback()
       }
     }
   }

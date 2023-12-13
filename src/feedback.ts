@@ -322,14 +322,6 @@ export const insertFeedback = () => {
     ? Number(submittedMarkEL.textContent)
     : 60
 
-  if (submittedMark > 0 && submittedMark <= 30) {
-    submittedMark = 30
-  } else if (submittedMark > 30 && submittedMark <= 50) {
-    submittedMark = 50
-  } else {
-    submittedMark = 60
-  }
-
   const numPercent = (marks / 60) * 100
   const obtainedMarkCeiled = Math.ceil(
     Number((submittedMark / 100) * numPercent)
