@@ -16,7 +16,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 
   if (window.location.pathname == "/instructor-dashboard/my-assignment") {
-    if (event.code == "KeyI") {
+    if (event.shiftKey && event.code == "KeyO") {
       if (document.querySelector(".assignment-evaluation-form")) return
       const assignment = document.querySelector(
         ".btn.btn-icon.btn-eye-icon.btn-primary"
