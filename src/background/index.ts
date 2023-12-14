@@ -57,8 +57,4 @@ chrome.runtime.onStartup.addListener(() => {
 
 chrome.runtime.onInstalled.addListener(() => {
   checkUpdate()
-
-  getLatestVersionInfo().then((response) => {
-    console.log(response)
-  })
 })
