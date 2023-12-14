@@ -23,9 +23,11 @@ const notOKay = (msg?: string | null) => {
 
 export const insertFeedback = () => {
   const sections = getJsonData().sections
+  const highestMark =
+    parseInt(document.querySelector(".badge")?.textContent as string) || 60
 
   let feedback = ""
-  let marks = 60
+  let marks = highestMark
   let globalIndex = 0
 
   for (const sectionIndex in sections) {
@@ -56,7 +58,7 @@ export const insertFeedback = () => {
         for (const subReqIndex in req.subRequirements) {
           const subReq = req.subRequirements[subReqIndex]
           const subReqId = `${parseInt(sectionIndex)}_${parseInt(
-            reqIndex,
+            reqIndex
           )}_${parseInt(subReqIndex)}`
 
           const subReqCorrect = getInputChecked(subReqId)
@@ -93,12 +95,12 @@ export const insertFeedback = () => {
   let submittedMark = totalMarkEl
     ? Number(totalMarkEl.value)
     : submittedMarkEL
-      ? Number(submittedMarkEL.textContent)
-      : 60
+    ? Number(submittedMarkEL.textContent)
+    : 60
 
-  const numPercent = (marks / 60) * 100
+  const numPercent = (marks / highestMark) * 100
   const obtainedMarkCeiled = Math.ceil(
-    Number((submittedMark / 100) * numPercent),
+    Number((submittedMark / 100) * numPercent)
   )
   const obtainedMark = Math.min(obtainedMarkCeiled, submittedMark)
 
@@ -115,7 +117,7 @@ export const insertFeedback = () => {
   markBox.addEventListener("keydown", (e) => {
     if (e.shiftKey && e.code == "Enter") {
       const submitButton = Array.from(document.querySelectorAll("button")).find(
-        (btn) => btn.textContent == "Submit",
+        (btn) => btn.textContent == "Submit"
       )
 
       if (submitButton) {
