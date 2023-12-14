@@ -1,23 +1,39 @@
 {
-  "name": "assignmentchecker",
-  "module": "src/index.ts",
+  "name": "assignment-checker",
+  "displayName": "Phero Assignment checker",
   "version": "0.1.2",
+  "description": "Assignment checker extensin for Programming Hero instructors",
+  "author": "Md Shahriyar Alam <contact@shahriyar.dev>",
   "scripts": {
-    "compile": "bun build ./src/index.ts ./src/background.ts ./src/popup.ts --outdir=dist --minify",
-    "export": "rm -rf ./dist && rm -rf ./assignment-checker && bun run compile && cp -r ./src/assets/ ./dist",
-    "publish": "cp -r ./dist ./assignment-checker && zip -r ./dist/assignment-checker.zip ./assignment-checker && rm -rf ./assignment-checker",
-    "upgrade": "bun run ./src/upgrade.ts",
-    "ep": "bun run export && bun run publish"
-  },
-  "devDependencies": {
-    "@types/semver": "^7.5.6",
-    "bun-types": "latest",
-    "semver": "^7.5.4"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "test": "plasmo test"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.254"
+    "plasmo": "0.84.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.251",
+    "@types/node": "20.9.0",
+    "@types/react": "18.2.37",
+    "@types/react-dom": "18.2.15",
+    "prettier": "3.0.3",
+    "typescript": "5.2.2"
+  },
+  "manifest": {
+    "host_permissions": [
+      "https://web.programming-hero.com/*"
+    ],
+    "permissions": [
+      "notifications",
+      "storage"
+    ],
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyMBNCVs7mJD5zt7ZX0zANb8JtfdmzxWuHT/t9LEGLHzUnQ+U6mfbupdncmAlwTTomUjjHOJSrij1D4PX+1I4YtPNEZibbwbgWl26dR8yrhQ6I8hj5zSnczvDpMdH08IZ1QWgahHL3qb7KRosYL9k55iZ1o8DmLd2A4LHDl7F6HrpNVIA671XG3mC33gN+A9dZDmIiR1Yl1l9H5DyFzEU84TC3Ckv5s6yHX4P9c4lpxLai095PuMS0WJde3Cjd0OMVxgTPPreTFBMhOGVgBjAhNB9x0phWUpkiF0keR7yWTGT0TQ3H7VWQP1MVzuMzulCjRAa0vuUcEyetqvBaao7mQIDAQAB"
   }
 }

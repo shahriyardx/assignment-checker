@@ -12,10 +12,6 @@ const handleKeyDown = (event: KeyboardEvent) => {
     showFeedbackBuilder()
   }
 
-  if (event.shiftKey && event.key == "BracketLeft") {
-    showGithubStats()
-  }
-
   if (window.location.pathname == "/instructor-dashboard/my-assignment") {
     if (event.shiftKey && event.code == "KeyO") {
       if (document.querySelector(".assignment-evaluation-form")) return
@@ -31,6 +27,10 @@ const handleKeyDown = (event: KeyboardEvent) => {
       if (document.getElementById("insert-button")) {
         insertFeedback()
       }
+    }
+
+    if (event.shiftKey && event.code == "BracketLeft") {
+      showGithubStats()
     }
   }
 }

@@ -1,54 +1,44 @@
-import { JsonData, Requirement, Section, SubRequirement } from "./types"
-
-const getJsonDataLegacy = () => {
-  const jsonDataLocal = JSON.parse(
-    localStorage.getItem("assignment-data") as string,
-  ) as JsonData & { data: { [key: string]: object } }
-  const jsonData = jsonDataLocal.data
-
-  const sections = []
-
-  for (const sectionName in jsonData) {
-    const requirements: Requirement[] = Object.values(
-      jsonData[sectionName],
-    ).map((requirement) => {
-      const subreqs: SubRequirement[] = []
-      for (const key in requirement) {
-        if (key.startsWith("sub_req_")) {
-          subreqs.push(requirement[key])
-        }
-      }
-      const reqData = {
-        data: {
-          description: requirement.description,
-          number: requirement.number,
-          correct: requirement.correct,
-          message: requirement.message,
-        },
-        subRequirements: subreqs,
-      }
-
-      return reqData
-    })
-
-    sections.push({
-      name: sectionName,
-      requirements,
-    })
-  }
-
-  return { sections: sections }
+export const getCurrentVersion = () => {
+  return `v${chrome.runtime.getManifest().version}`
 }
 
-export const getJsonData = () => {
-  const jsonDataLocal = JSON.parse(
-    localStorage.getItem("assignment-data") as string,
-  )
+export const shouldCheckForUpdate = async (force: boolean = false) => {
+  const currentDateTime = new Date()
 
-  const jsonData = jsonDataLocal.data
-  if (jsonData.type == "new") {
-    return jsonData as { sections: Section[] }
+  if (force) {
+    await chrome.storage.local.set({
+      lastUpdateCheck: currentDateTime.toISOString()
+    })
+
+    return true
   }
 
-  return getJsonDataLegacy()
+  const storageData = await chrome.storage.local.get("lastUpdateCheck")
+  if (storageData.lastUpdateCheck) {
+    const lastDate = new Date(storageData.lastUpdateCheck).getTime()
+    const currentTime = currentDateTime.getTime()
+
+    const delta = 24 * 60 * 60 * 1000
+    const diff = currentTime - lastDate
+
+    if (diff < delta) return false
+  }
+
+  return true
+}
+
+export const getLatestVersionInfo = async (force: boolean = false) => {
+  if (!(await shouldCheckForUpdate(force)))
+    return await chrome.storage.local.get(["latestVersion", "changelog"])
+
+  const data = await (
+    await fetch(
+      ` https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`
+    )
+  ).json()
+
+  const versionInfo = { latestVersion: data.tag_name, changelog: data.body }
+  chrome.storage.local.set(versionInfo)
+
+  return versionInfo
 }

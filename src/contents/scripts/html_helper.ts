@@ -1,5 +1,5 @@
 import { insertFeedback } from "./feedback"
-import { Requirement, Section, SubRequirement } from "./types"
+import type { Requirement, Section, SubRequirement } from "./types"
 import { getJsonData } from "./utils"
 
 const getCustomFeedbackEl = (uniqueId: string) => {
