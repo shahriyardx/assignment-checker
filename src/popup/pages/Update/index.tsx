@@ -2,10 +2,10 @@ import React from "react"
 
 import NewVersionAvailable from "./NewVersionAvailable"
 import UpToDate from "./UpToDate"
-import useLatestVersion from "./useVersion"
+import useVersion from "./useVersion"
 
 const Update = () => {
-  const versionInfo = useLatestVersion()
+  const versionInfo = useVersion()
 
   if (versionInfo.loading) return <p>Loading...</p>
 

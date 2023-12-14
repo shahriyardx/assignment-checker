@@ -2,6 +2,7 @@ import { getCurrentVersion, getLatestVersionInfo } from "@/utils"
 import { useEffect, useState } from "react"
 import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
+
 export type VersionInfo = {
   latestVersion: string | null
   changelog: string | null
@@ -27,9 +28,10 @@ const useVersion = () => {
 
   const getUpdateInfo = async (force: boolean = false) => {
     const { latestVersion, changelog } = await getLatestVersionInfo(force)
+
     setVersionInfo({
       ...versionInfo,
-      latestVersion,
+      latestVersion: latestVersion,
       changelog,
       loading: false,
       lastUpdateCheck: new Date(lastUpdateCheck),
@@ -42,7 +44,12 @@ const useVersion = () => {
   }
 
   useEffect(() => {
-    getUpdateInfo()
+    storage.getItem("latestVersion").then((value) => {
+      if (!value) {
+        return getUpdateInfo(true)
+      }
+      getUpdateInfo()
+    })
   }, [])
 
   return { ...versionInfo, refetch }
