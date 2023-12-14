@@ -32,7 +32,7 @@ const sendUpdateNotification = ({
   chrome.action.setBadgeText({ text: "1" })
 
   chrome.notifications.create(btnId, {
-    iconUrl: "icons/icon32.png",
+    iconUrl: "/assets/icon.png",
     title: `[Update] ${manifest.name}`,
     type: "basic",
     message: `A new update is available for ${manifest.name} (${latestVersion})\n\nWhats New:\n${changelog}`,
