@@ -1,9 +1,9 @@
 import React from "react"
-
+import moment from "moment"
 import type { VersionInfo } from "./useVersion"
 
 const UpToDate = ({
-  versionInfo
+  versionInfo,
 }: {
   versionInfo: VersionInfo & { refetch: () => void }
 }) => {
@@ -11,17 +11,21 @@ const UpToDate = ({
 
   return (
     <div className="flex flex-col h-full">
-      <h3 className="text-lg font-semibold">Already up to date</h3>
+      <h3 className="text-lg font-semibold">Already up to date ⚡️</h3>
 
-      <p>
+      <p className="mt-2">
         <span className="text-white">Current Version:</span> {latestVersion}{" "}
       </p>
-      <p>Last Update Check: {lastUpdateCheck?.toISOString()}</p>
+      <p>
+        <span className="text-white">Last Update Check:</span>{" "}
+        {moment(lastUpdateCheck).format("MMM Do, YYYY, h:mm A")}
+      </p>
 
       <div className="mt-auto">
         <button
           onClick={() => refetch()}
-          className="px-3 py-2 text-xs bg-indigo-500 hover:bg-indigo-600 text-white rounded-md">
+          className="px-3 py-2 text-xs bg-indigo-500 hover:bg-indigo-600 text-white rounded-md"
+        >
           Check Update
         </button>
       </div>

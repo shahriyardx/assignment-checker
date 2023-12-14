@@ -7,7 +7,7 @@ const NewVersionAvailable = ({ versionInfo }: { versionInfo: VersionInfo }) => {
 
   return (
     <div className="flex flex-col items-center">
-      <h3 className="text-2xl font-bold">Update Available</h3>
+      <h3 className="text-2xl font-bold">⬇ Update Available</h3>
       <p>{latestVersion}</p>
       <button
         onClick={() =>
