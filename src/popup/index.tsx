@@ -13,12 +13,14 @@ function IndexPopup() {
   return (
     <div className="w-[300px] h-[200px] bg-zinc-700 text-zinc-200">
       <div className="flex items-center gap-2 px-3 py-2 bg-zinc-800">
-        {pages.map((page) => (
+        {pages.map((page, index) => (
           <button
+            key={`${index}_n`}
             onClick={() => setCurrentPage(page)}
             className={`${
               page === currentPage ? "text-indigo-300" : "text-white"
-            }`}>
+            }`}
+          >
             {page}
           </button>
         ))}

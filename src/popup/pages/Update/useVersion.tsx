@@ -1,6 +1,7 @@
 import { getCurrentVersion, getLatestVersionInfo } from "@/utils"
 import { useEffect, useState } from "react"
-
+import { Storage } from "@plasmohq/storage"
+import { useStorage } from "@plasmohq/storage/hook"
 export type VersionInfo = {
   latestVersion: string | null
   changelog: string | null
@@ -9,25 +10,29 @@ export type VersionInfo = {
   lastUpdateCheck?: Date
 }
 
+const storage = new Storage({ area: "local" })
+
 const useVersion = () => {
+  const [lastUpdateCheck] = useStorage({
+    key: "lastUpdateCheck",
+    instance: storage,
+  })
+
   const [versionInfo, setVersionInfo] = useState<VersionInfo>({
     latestVersion: null,
     changelog: null,
     loading: true,
-    currentVersion: getCurrentVersion()
+    currentVersion: getCurrentVersion(),
   })
 
   const getUpdateInfo = async (force: boolean = false) => {
-    const { lastUpdateCheck } =
-      await chrome.storage.local.get("lastUpdateCheck")
-
     const { latestVersion, changelog } = await getLatestVersionInfo(force)
     setVersionInfo({
       ...versionInfo,
       latestVersion,
       changelog,
       loading: false,
-      lastUpdateCheck: new Date(lastUpdateCheck)
+      lastUpdateCheck: new Date(lastUpdateCheck),
     })
   }
 

@@ -1,3 +1,7 @@
+import { Storage } from "@plasmohq/storage"
+
+const storage = new Storage({ area: "local" })
+
 export const getCurrentVersion = () => {
   return `v${chrome.runtime.getManifest().version}`
 }
@@ -6,16 +10,14 @@ export const shouldCheckForUpdate = async (force: boolean = false) => {
   const currentDateTime = new Date()
 
   if (force) {
-    await chrome.storage.local.set({
-      lastUpdateCheck: currentDateTime.toISOString()
-    })
-
+    storage.set("lastUpdateCheck", currentDateTime.toISOString())
     return true
   }
 
-  const storageData = await chrome.storage.local.get("lastUpdateCheck")
-  if (storageData.lastUpdateCheck) {
-    const lastDate = new Date(storageData.lastUpdateCheck).getTime()
+  const lastUpdateCheck = await storage.get("lastUpdateCheck")
+
+  if (lastUpdateCheck) {
+    const lastDate = new Date(lastUpdateCheck).getTime()
     const currentTime = currentDateTime.getTime()
 
     const delta = 24 * 60 * 60 * 1000
@@ -28,17 +30,21 @@ export const shouldCheckForUpdate = async (force: boolean = false) => {
 }
 
 export const getLatestVersionInfo = async (force: boolean = false) => {
-  if (!(await shouldCheckForUpdate(force)))
-    return await chrome.storage.local.get(["latestVersion", "changelog"])
+  if (!(await shouldCheckForUpdate(force))) {
+    const latestVersion = await storage.get("latestVersion")
+    const changelog = await storage.get("changelog")
+  
+    return { latestVersion, changelog }
+  }
 
   const data = await (
     await fetch(
-      ` https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`
+      ` https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`,
     )
   ).json()
 
-  const versionInfo = { latestVersion: data.tag_name, changelog: data.body }
-  chrome.storage.local.set(versionInfo)
+  storage.set("latestVersion", data.tag_name)
+  storage.set("changelog", data.body)
 
-  return versionInfo
+  return { latestVersion: data.tag_name, changelog: data.body }
 }

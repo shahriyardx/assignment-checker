@@ -1,17 +1,21 @@
-import { getCurrentVersion, getLatestVersionInfo, shouldCheckForUpdate } from "@/utils"
+import {
+  getCurrentVersion,
+  getLatestVersionInfo,
+  shouldCheckForUpdate,
+} from "@/utils"
+import { Storage } from "@plasmohq/storage"
 
+const storage = new Storage({ area: "local" })
 
 const checkUpdate = async () => {
   const currentDateTime = new Date()
 
   if (!(await shouldCheckForUpdate())) return
 
-  await chrome.storage.local.set({
-    lastUpdateCheck: currentDateTime.toISOString()
-  })
-
-  const currentVersion = getCurrentVersion()
+  await storage.set("lastUpdateCheck", currentDateTime.toISOString())
+  
   const { latestVersion, changelog } = await getLatestVersionInfo()
+  const currentVersion = getCurrentVersion()
 
   if (currentVersion !== latestVersion) {
     sendUpdateNotification({ currentVersion, latestVersion, changelog })
@@ -20,7 +24,7 @@ const checkUpdate = async () => {
 
 const sendUpdateNotification = ({
   latestVersion,
-  changelog
+  changelog,
 }: {
   currentVersion: string
   latestVersion: string
@@ -32,22 +36,22 @@ const sendUpdateNotification = ({
   chrome.action.setBadgeText({ text: "1" })
 
   chrome.notifications.create(btnId, {
-    iconUrl: "/assets/icon.png",
+    iconUrl: "~assets/icon.png",
     title: `[Update] ${manifest.name}`,
     type: "basic",
     message: `A new update is available for ${manifest.name} (${latestVersion})\n\nWhats New:\n${changelog}`,
     requireInteraction: true,
-    buttons: [{ title: "Download" }]
+    buttons: [{ title: "Download" }],
   })
 
   chrome.notifications.onButtonClicked.addListener(
     (notificationId, buttonIndex) => {
       if (notificationId === notificationId && buttonIndex === 0) {
         chrome.tabs.create({
-          url: `https://github.com/shahriyardx/assignment-checker/releases/tag/${latestVersion}`
+          url: `https://github.com/shahriyardx/assignment-checker/releases/tag/${latestVersion}`,
         })
       }
-    }
+    },
   )
 }
 

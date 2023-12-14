@@ -6,10 +6,11 @@
   "author": "Md Shahriyar Alam <contact@shahriyar.dev>",
   "scripts": {
     "dev": "plasmo dev",
-    "build": "plasmo build",
+    "build": "plasmo build --zip",
     "test": "plasmo test"
   },
   "dependencies": {
+    "@plasmohq/storage": "^1.9.0",
     "moment": "^2.29.4",
     "plasmo": "0.84.0",
     "react": "18.2.0",
