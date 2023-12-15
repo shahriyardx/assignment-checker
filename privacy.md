@@ -1,5 +1,5 @@
 # Privacy Policy
-Last Updated: Dec 7, 2023
+Last Updated: Dec 16, 2023
 
 ### Introduction
 Welcome to `Phero Assignment Checker`. We are committed to protecting your privacy and providing you with a positive experience while using our browser extension. This Privacy Policy outlines how we collect, use, disclose, and safeguard your personal information.
