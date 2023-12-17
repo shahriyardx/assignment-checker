@@ -1,4 +1,4 @@
-import { Repo } from "./types"
+import { type Repo } from "./types"
 
 export const getRepos = (content: string) => {
   const githubRepoPattern = /https?:\/\/github\.com\/([^\s/]+)\/([^\s/]+)/g

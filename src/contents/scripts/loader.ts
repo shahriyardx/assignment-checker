@@ -1,4 +1,4 @@
-import { JsonData } from "./types"
+import { type JsonData } from "./types"
 
 const getButton = (content: string) => {
   const btn = document.createElement("button")

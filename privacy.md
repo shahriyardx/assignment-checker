@@ -1,15 +1,13 @@
 # Privacy Policy
-Last Updated: Dec 7, 2023
+Last Updated: Dec 16, 2023
 
 ### Introduction
 Welcome to `Phero Assignment Checker`. We are committed to protecting your privacy and providing you with a positive experience while using our browser extension. This Privacy Policy outlines how we collect, use, disclose, and safeguard your personal information.
 
 ### Information We Collect
-**Browser Permissions:** This extension may request specific permissions, such as the activeTab permission, to enhance its functionality. These permissions are used exclusively for the purposes outlined in our extension's features
+**Browser Permissions:** This extension may request specific permissions, such as the notifications and storage permission, to enhance its functionality. These permissions are used exclusively for the purposes outlined in our extension's features
 
 **Usage Data:** This extension does not collect any personal information of the user using this extension.
-
-**Extension Functionality:** The permission `activeTab` is used to provide and improve the functionality of our extension, such as checking assignment submissions and providing grades.
 
 ### Data Sharing
 We do not sell, trade, or otherwise transfer your personal information to third parties. We don't even collect any personal information in the first place.

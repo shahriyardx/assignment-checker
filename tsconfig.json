@@ -1,12 +1,11 @@
 {
+  "extends": "plasmo/templates/tsconfig.base",
+  "exclude": ["node_modules"],
+  "include": [".plasmo/index.d.ts", "./**/*.ts", "./**/*.tsx"],
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["dom", "ESNext"],
-    "outDir": "./dist",
-    "strict": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "."
+  }
 }
