@@ -7,13 +7,22 @@ import { Storage } from "@plasmohq/storage"
 
 const storage = new Storage({ area: "local" })
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.url) {
+    chrome.tabs.sendMessage(tabId, {
+      message: "urlChange",
+      url: changeInfo.url,
+    })
+  }
+})
+
 const checkUpdate = async () => {
   const currentDateTime = new Date()
 
   if (!(await shouldCheckForUpdate())) return
 
   await storage.set("lastUpdateCheck", currentDateTime.toISOString())
-  
+
   const { latestVersion, changelog } = await getLatestVersionInfo()
   const currentVersion = getCurrentVersion()
 
