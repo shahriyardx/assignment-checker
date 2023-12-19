@@ -1,4 +1,5 @@
 import {
+  RELEASE_URL,
   getCurrentVersion,
   getLatestVersionInfo,
   shouldCheckForUpdate,
@@ -10,9 +11,16 @@ const storage = new Storage({ area: "local" })
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.url) {
     chrome.tabs.sendMessage(tabId, {
-      message: "urlChange",
+      action: "urlChange",
       url: changeInfo.url,
     })
+  }
+})
+
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.action === "createTab") {
+    chrome.tabs.create({ url: message.url })
+    sendResponse({ received: true })
   }
 })
 
@@ -57,7 +65,7 @@ const sendUpdateNotification = ({
     (notificationId, buttonIndex) => {
       if (notificationId === notificationId && buttonIndex === 0) {
         chrome.tabs.create({
-          url: `https://github.com/shahriyardx/assignment-checker/releases/tag/${latestVersion}`,
+          url: `${RELEASE_URL}/${latestVersion}`,
         })
       }
     },

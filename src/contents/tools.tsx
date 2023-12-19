@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react"
 import cssText from "data-text:@/styles.css"
 
-import { ChevronLeft, ChevronRight, Eye, Focus, Save } from "lucide-react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Focus,
+  Save,
+  DownloadCloud,
+} from "lucide-react"
 import { insertFeedback } from "./scripts/feedback"
 import { showFeedbackBuilder } from "./scripts/html_helper"
 import { openFirstAssignment, submitMarks } from "./scripts/utils"
 
 import type { PlasmoCSConfig } from "plasmo"
+import useVersion from "@/popup/pages/Update/useVersion"
+import { RELEASE_URL } from "@/utils"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -35,14 +44,16 @@ const allowedPaths = [
 ]
 
 const Tools = () => {
+  const versionInfo = useVersion()
+
   const [open, setOpen] = useState(false)
   const [showTools, setShowTools] = useState(false)
 
   useEffect(() => {
     if (allowedPaths.includes(window.location.href)) setShowTools(true)
 
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.message === "urlChange") {
+    chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+      if (request.action === "urlChange") {
         if (allowedPaths.includes(request.url)) {
           setShowTools(true)
         } else {
@@ -101,6 +112,21 @@ const Tools = () => {
             <Save /> <span>Submit</span>
             <ShortCut text="Shift + Enter" />
           </button>
+
+          {versionInfo.latestVersion &&
+            versionInfo.currentVersion !== versionInfo.latestVersion && (
+              <button
+                className="relative hover:bg-zinc-700 rounded-bl-md group"
+                onClick={() =>
+                  chrome.runtime.sendMessage({
+                    action: "createTab",
+                    url: `${RELEASE_URL}/${versionInfo.latestVersion}`,
+                  })
+                }
+              >
+                <DownloadCloud /> <span>Update</span>
+              </button>
+            )}
         </div>
       )}
     </div>

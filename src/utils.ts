@@ -48,3 +48,5 @@ export const getLatestVersionInfo = async (force: boolean = false) => {
 
   return { latestVersion: data.tag_name, changelog: data.body }
 }
+
+export const RELEASE_URL = 'https://github.com/shahriyardx/assignment-checker/releases/tag'
