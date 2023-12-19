@@ -52,3 +52,24 @@ export const getJsonData = () => {
 
   return getJsonDataLegacy()
 }
+
+export const openFirstAssignment = () => {
+  if (document.querySelector(".assignment-evaluation-form")) return
+  const assignment = document.querySelector(
+    ".btn.btn-icon.btn-eye-icon",
+  ) as HTMLButtonElement
+
+  if (assignment) {
+    assignment.click()
+  }
+}
+
+export const submitMarks = () => {
+  const submitButton = Array.from(document.querySelectorAll("button")).find(
+    (btn) => btn.textContent == "Submit" || btn.textContent == "Update Mark",
+  )
+
+  if (submitButton) {
+    submitButton.click()
+  }
+}
