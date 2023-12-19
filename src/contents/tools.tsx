@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import cssText from "data-text:@/styles.css"
 
 import { ChevronLeft, ChevronRight, Eye, Focus, Save } from "lucide-react"
@@ -29,11 +29,36 @@ const ShortCut = ({ text }: { text: string }) => {
   )
 }
 
+const allowedPaths = [
+  "https://web.programming-hero.com/instructor-dashboard/assignments",
+  "https://web.programming-hero.com/instructor-dashboard/my-assignment",
+]
+
 const Tools = () => {
   const [open, setOpen] = useState(false)
+  const [showTools, setShowTools] = useState(false)
+
+  useEffect(() => {
+    if (allowedPaths.includes(window.location.href)) setShowTools(true)
+
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.message === "urlChange") {
+        if (allowedPaths.includes(request.url)) {
+          setShowTools(true)
+        } else {
+          setShowTools(false)
+        }
+      }
+      sendResponse({ received: true })
+    })
+  }, [])
 
   return (
-    <div className="fixed right-0 -translate-y-1/2 top-1/2">
+    <div
+      className={`fixed right-0 -translate-y-1/2 top-1/2 ${
+        !showTools && "hidden"
+      }`}
+    >
       <div className="absolute -translate-y-1/2 top-1/2 right-full">
         <button
           className="py-5 text-white bg-zinc-900 rounded-l-md"
@@ -84,10 +109,7 @@ const Tools = () => {
 
 export {}
 export const config: PlasmoCSConfig = {
-  matches: [
-    "https://web.programming-hero.com/instructor-dashboard/assignments",
-    "https://web.programming-hero.com/instructor-dashboard/my-assignment",
-  ],
+  matches: ["https://web.programming-hero.com/instructor-dashboard/*"],
   all_frames: true,
 }
 
