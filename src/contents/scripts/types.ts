@@ -21,6 +21,8 @@ export interface BaseRequirement {
   number: string
   correct: boolean
   message: string
+  okayMessage: string
+  notOkayMessage: string
 }
 
 export type SubRequirement = BaseRequirement & {}
@@ -33,4 +35,11 @@ export type Requirement = {
 export type Section = {
   name: string
   requirements: Requirement[]
+}
+
+export type Json = {
+  type: string
+  data: {
+    sections: Section[]
+  }
 }

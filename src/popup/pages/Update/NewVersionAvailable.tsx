@@ -12,10 +12,11 @@ const NewVersionAvailable = ({ versionInfo }: { versionInfo: VersionInfo }) => {
       <button
         onClick={() =>
           chrome.tabs.create({
-            url: `https://github.com/shahriyardx/assignment-checker/releases/tag/${latestVersion}`
+            url: `https://github.com/shahriyardx/assignment-checker/releases/tag/${latestVersion}`,
           })
         }
-        className="mt-3 px-3 py-2 bg-indigo-500 text-white rounded-md">
+        className="mt-3 px-3 py-2 bg-indigo-500 text-white rounded-md"
+      >
         Download
       </button>
     </div>

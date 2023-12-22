@@ -2,11 +2,16 @@ import { showGithubStats } from "./github"
 import { showJsonLoader } from "./loader"
 import { insertFeedback } from "./feedback"
 import { showFeedbackBuilder } from "./html_helper"
-import { openFirstAssignment } from "./utils"
+import { getJsonData, openFirstAssignment } from "./utils"
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.shiftKey && event.code == "Backslash") {
     showJsonLoader()
+  }
+
+  if (event.shiftKey && event.code == "KeyP") {
+    const data = getJsonData()
+    console.log(data)
   }
 
   if (!event.shiftKey && event.code == "BracketRight") {

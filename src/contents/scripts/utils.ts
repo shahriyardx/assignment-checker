@@ -1,56 +1,72 @@
-import type { JsonData, Requirement, Section, SubRequirement } from "./types"
+import type { Json, Requirement, Section, SubRequirement } from "./types"
 
-const getJsonDataLegacy = () => {
-  const jsonDataLocal = JSON.parse(
-    localStorage.getItem("assignment-data") as string,
-  ) as JsonData & { data: { [key: string]: object } }
-  const jsonData = jsonDataLocal.data
+const legacyToNew = (json: { [key: string]: any }) => {
+  const data: Json = {
+    type: "new",
+    data: { sections: [] },
+  }
 
-  const sections = []
+  for (const sectionName in json) {
+    const requirements: { [key: string]: any }[] = Object.values(
+      json[sectionName],
+    )
+    const transformedRequirements: Requirement[] = requirements.map(
+      (requirement) => {
+        const subreqs: SubRequirement[] = []
 
-  for (const sectionName in jsonData) {
-    const requirements: Requirement[] = Object.values(
-      jsonData[sectionName],
-    ).map((requirement) => {
-      const subreqs: SubRequirement[] = []
-      for (const key in requirement) {
-        if (key.startsWith("sub_req_")) {
-          subreqs.push(requirement[key])
+        for (const key in requirement) {
+          console.log(key)
+          if (key.startsWith("sub_req_")) {
+            const subReq = requirement[key]
+
+            const transformed = {
+              description: subReq.description,
+              number: subReq.number as string,
+              correct: subReq.correct,
+              message: subReq.message,
+              okayMessage: subReq.okayMessage || "okay",
+              notOkayMessage: subReq.notOkayMessage || subReq.message,
+            }
+
+            subreqs.push(transformed)
+          }
         }
-      }
-      const reqData = {
-        data: {
-          description: requirement.description,
-          number: requirement.number,
-          correct: requirement.correct,
-          message: requirement.message,
-        },
-        subRequirements: subreqs,
-      }
 
-      return reqData
-    })
+        const reqData = {
+          data: {
+            description: requirement.description,
+            number: requirement.number as string,
+            correct: requirement.correct,
+            message: requirement.message,
+            okayMessage: requirement.okayMessage || "okay",
+            notOkayMessage: requirement.notOkayMessage || requirement.message,
+          },
+          subRequirements: subreqs,
+        }
 
-    sections.push({
+        return reqData
+      },
+    )
+
+    data.data.sections.push({
       name: sectionName,
-      requirements,
+      requirements: transformedRequirements,
     })
   }
 
-  return { sections: sections }
+  console.log(data)
+  return data
 }
 
 export const getJsonData = () => {
-  const jsonDataLocal = JSON.parse(
-    localStorage.getItem("assignment-data") as string,
-  )
+  const data = localStorage.getItem("assignment-data") as string
+  const assignmentJson = JSON.parse(data).data
 
-  const jsonData = jsonDataLocal.data
-  if (jsonData.type == "new") {
-    return jsonData as { sections: Section[] }
+  if (assignmentJson.type == "new") {
+    return assignmentJson.sections as Section[]
   }
 
-  return getJsonDataLegacy()
+  return legacyToNew(assignmentJson).data.sections
 }
 
 export const openFirstAssignment = () => {

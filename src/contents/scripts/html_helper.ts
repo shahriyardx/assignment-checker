@@ -209,7 +209,8 @@ export const getCustomFeedback = (
 }
 
 export const showFeedbackBuilder = () => {
-  const data = getJsonData()
+  const sections = getJsonData()
+
   const feedbackBox = document.querySelector(".feedback-box")
 
   const existingBuilder = document.querySelector("#feedbackbuilder")
@@ -222,8 +223,8 @@ export const showFeedbackBuilder = () => {
   feedbackBuilder.style.padding = "20px"
   feedbackBuilder.style.borderRadius = "20px"
 
-  for (const sectionIndex in data.sections) {
-    const section = data.sections[sectionIndex]
+  for (const sectionIndex in sections) {
+    const section = sections[sectionIndex]
     const sectionHtml = createSection(section, parseInt(sectionIndex))
     feedbackBuilder.appendChild(sectionHtml)
   }
@@ -231,7 +232,7 @@ export const showFeedbackBuilder = () => {
   const insertButton = document.createElement("button")
   insertButton.id = "insert-button"
   insertButton.textContent = "Insert"
-  insertButton.className = "btn px-4 btn-primary w-full"
+  insertButton.className = "w-full px-4 btn btn-primary"
   insertButton.addEventListener("click", insertFeedback)
 
   feedbackBuilder.appendChild(insertButton)

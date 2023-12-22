@@ -33,7 +33,7 @@ export const getLatestVersionInfo = async (force: boolean = false) => {
   if (!(await shouldCheckForUpdate(force))) {
     const latestVersion = await storage.get("latestVersion")
     const changelog = await storage.get("changelog")
-  
+
     return { latestVersion, changelog }
   }
 
@@ -49,4 +49,5 @@ export const getLatestVersionInfo = async (force: boolean = false) => {
   return { latestVersion: data.tag_name, changelog: data.body }
 }
 
-export const RELEASE_URL = 'https://github.com/shahriyardx/assignment-checker/releases/tag'
+export const RELEASE_URL =
+  "https://github.com/shahriyardx/assignment-checker/releases/tag"

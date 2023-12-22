@@ -1,4 +1,5 @@
 import { getCustomFeedback, getInputChecked } from "./html_helper"
+import type { BaseRequirement, Requirement } from "./types"
 import { getJsonData } from "./utils"
 
 const feedbackFooter = `
@@ -17,15 +18,17 @@ const feedbackFooter = `
   <b>Let's Code_ Your Career</b>
 `
 
-const notOKay = (msg?: string | null) => {
-  return `<em style='color:red;'>→ ${msg || "not okay"}</em>`
+const notOKay = (msg?: string | null, mark: number = 0) => {
+  return `<em style='color:${mark > 0 ? "red" : "orange"};'>→ ${
+    msg || "not okay"
+  }</em>`
 }
 
 export const insertFeedback = () => {
   const insertBtn = document.getElementById("insert-button")
   if (!insertBtn) return
 
-  const sections = getJsonData().sections
+  const sections = getJsonData()
   const highestMark =
     parseInt(document.querySelector(".badge")?.textContent as string) || 60
 
@@ -40,17 +43,18 @@ export const insertFeedback = () => {
 
     for (const reqIndex in section.requirements) {
       globalIndex += 1
-      const req = section.requirements[reqIndex]
+      const req = section.requirements[reqIndex] as Requirement
       const reqId = `${parseInt(sectionIndex)}_${parseInt(reqIndex)}`
       const reqCorrect = getInputChecked(reqId)
 
       if (!reqCorrect) {
         const [cf, cn] = getCustomFeedback(reqId)
-        if (cf) {
-          feedback += `${globalIndex}. ${req.data.description} ${notOKay(cf)}\n`
-        } else {
-          feedback += `${globalIndex}. ${req.data.description} ${notOKay()}\n`
-        }
+
+        feedback += `${globalIndex}. ${req.data.description} ${notOKay(
+          cf || req.data.notOkayMessage,
+          Number(req.data.number),
+        )}\n`
+
         marks -= Number(req.data.number)
         marks += cn
       } else {
@@ -58,8 +62,9 @@ export const insertFeedback = () => {
         let subReqMsg = ""
         let allSubOk = true
 
-        for (const subReqIndex in req.subRequirements) {
-          const subReq = req.subRequirements[subReqIndex]
+        const subRequirements = req.subRequirements as BaseRequirement[]
+        for (const subReqIndex in subRequirements) {
+          const subReq = subRequirements[subReqIndex]
           const subReqId = `${parseInt(sectionIndex)}_${parseInt(
             reqIndex,
           )}_${parseInt(subReqIndex)}`
@@ -75,14 +80,17 @@ export const insertFeedback = () => {
               marks += cn
             }
 
-            subReqMsg += ` └─ ${subReq.description} ${notOKay(cf)}\n`
+            subReqMsg += ` └─ ${subReq.description} ${notOKay(
+              cf || subReq.notOkayMessage,
+              Number(subReq.number),
+            )}\n`
           }
         }
 
         if (!allSubOk) {
           reqMsg += "\n" + subReqMsg
         } else {
-          reqMsg += ` → okay\n`
+          reqMsg += ` → ${req.data.okayMessage}\n`
         }
 
         feedback += reqMsg
