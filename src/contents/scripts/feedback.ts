@@ -28,9 +28,30 @@ export const insertFeedback = () => {
   const insertBtn = document.getElementById("insert-button")
   if (!insertBtn) return
 
-  const sections = getJsonData()
-  const highestMark =
-    parseInt(document.querySelector(".badge")?.textContent as string) || 60
+  const jsonData = getJsonData()
+  const sections = jsonData.sections
+
+  const submittedMarkEL = document.querySelector(".font-weight-bold.pl-2")
+  const totalMarkEl = document.querySelector("#TotalMark") as HTMLInputElement
+  const submittedMark = totalMarkEl
+    ? Number(totalMarkEl.value)
+    : submittedMarkEL
+    ? Number(submittedMarkEL.textContent)
+    : 60
+
+  let highestMark = 0
+
+  if (jsonData.highestMark) {
+    highestMark = Number(jsonData.highestMark)
+  } else {
+    const badge = document.querySelector(".badge")?.textContent
+
+    if (badge) {
+      highestMark = parseInt(document.querySelector(".badge")?.textContent as string)
+    } else {
+      highestMark = submittedMark
+    }
+  }
 
   let feedback = ""
   let marks = highestMark
@@ -101,19 +122,15 @@ export const insertFeedback = () => {
 
   feedback += feedbackFooter
 
-  const submittedMarkEL = document.querySelector(".font-weight-bold.pl-2")
-  const totalMarkEl = document.querySelector("#TotalMark") as HTMLInputElement
-  let submittedMark = totalMarkEl
-    ? Number(totalMarkEl.value)
-    : submittedMarkEL
-    ? Number(submittedMarkEL.textContent)
-    : 60
+  let obtainedMark = marks
 
-  const numPercent = (marks / highestMark) * 100
-  const obtainedMarkCeiled = Math.ceil(
-    Number((submittedMark / 100) * numPercent),
-  )
-  const obtainedMark = Math.min(obtainedMarkCeiled, submittedMark)
+  if (highestMark != submittedMark) {
+    const numPercent = (marks / highestMark) * 100
+    const obtainedMarkCeiled = Math.ceil(
+      Number((submittedMark / 100) * numPercent),
+    )
+    obtainedMark = Math.min(obtainedMarkCeiled, submittedMark)
+  }
 
   const textArea = document.querySelector(".ql-editor p")
   if (textArea) {

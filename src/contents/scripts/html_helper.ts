@@ -209,7 +209,7 @@ export const getCustomFeedback = (
 }
 
 export const showFeedbackBuilder = () => {
-  const sections = getJsonData()
+  const sections = getJsonData().sections
 
   const feedbackBox = document.querySelector(".feedback-box")
 

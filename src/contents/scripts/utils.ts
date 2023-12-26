@@ -1,9 +1,17 @@
-import type { Json, Requirement, Section, SubRequirement } from "./types"
+import type {
+  AssignmentData,
+  Json,
+  OldJson,
+  Requirement,
+  Section,
+  SubRequirement,
+} from "./types"
 
 const legacyToNew = (json: { [key: string]: any }) => {
   const data: Json = {
     type: "new",
-    data: { sections: [] },
+    sections: [],
+    highestMark: null,
   }
 
   for (const sectionName in json) {
@@ -48,25 +56,26 @@ const legacyToNew = (json: { [key: string]: any }) => {
       },
     )
 
-    data.data.sections.push({
+    data.sections.push({
       name: sectionName,
       requirements: transformedRequirements,
     })
   }
 
-  console.log(data)
   return data
 }
 
 export const getJsonData = () => {
   const data = localStorage.getItem("assignment-data") as string
-  const assignmentJson = JSON.parse(data).data
+  const assignmentJson = JSON.parse(data) as AssignmentData
 
-  if (assignmentJson.type == "new") {
-    return assignmentJson.sections as Section[]
+  const assignmentData = assignmentJson.data
+
+  if (assignmentData.type == "new") {
+    return assignmentData as Json
   }
 
-  return legacyToNew(assignmentJson).data.sections
+  return legacyToNew(assignmentData as OldJson) as Json
 }
 
 export const openFirstAssignment = () => {

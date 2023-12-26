@@ -37,9 +37,17 @@ export type Section = {
   requirements: Requirement[]
 }
 
+export type OldJson = {
+  [key: string]: any
+}
+
 export type Json = {
   type: string
-  data: {
-    sections: Section[]
-  }
+  sections: Section[],
+  highestMark?: number
+}
+
+export type AssignmentData = {
+  fileanme: string
+  data: Json | OldJson
 }
