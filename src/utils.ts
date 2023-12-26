@@ -34,12 +34,12 @@ export const getLatestVersionInfo = async (force: boolean = false) => {
     const latestVersion = await storage.get("latestVersion")
     const changelog = await storage.get("changelog")
 
-    return { latestVersion, changelog }
+    if (latestVersion && changelog) return { latestVersion, changelog }
   }
 
   const data = await (
     await fetch(
-      ` https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`,
+      `https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`,
     )
   ).json()
 
@@ -50,4 +50,4 @@ export const getLatestVersionInfo = async (force: boolean = false) => {
 }
 
 export const RELEASE_URL =
-  "https://github.com/shahriyardx/assignment-checker/releases/tag"
+  "https://github.com/shahriyardx/assignment-checker/releases/latest"
