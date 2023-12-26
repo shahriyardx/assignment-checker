@@ -34,7 +34,7 @@ const useVersion = () => {
       latestVersion: latestVersion,
       changelog,
       loading: false,
-      lastUpdateCheck: new Date(lastUpdateCheck),
+      lastUpdateCheck: lastUpdateCheck ? new Date(lastUpdateCheck) : new Date(),
     })
   }
 
