@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react"
 import cssText from "data-text:@/styles.css"
+import React, { useEffect, useState } from "react"
+import type { PlasmoCSConfig } from "plasmo"
 
 import {
   ChevronLeft,
   ChevronRight,
+  DownloadCloud,
   Eye,
   Focus,
   Save,
-  DownloadCloud,
 } from "lucide-react"
+
 import { insertFeedback } from "./scripts/feedback"
 import { showFeedbackBuilder } from "./scripts/html_helper"
 import { openFirstAssignment, submitMarks } from "./scripts/utils"
 
-import type { PlasmoCSConfig } from "plasmo"
-import useVersion from "@/popup/pages/Update/useVersion"
 import { RELEASE_URL } from "@/utils"
+import { allowedPaths } from "./scripts/events"
+
+import useVersion from "@/popup/pages/Update/useVersion"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -38,11 +41,6 @@ const ShortCut = ({ text }: { text: string }) => {
   )
 }
 
-const allowedPaths = [
-  "https://web.programming-hero.com/instructor-dashboard/assignments",
-  "https://web.programming-hero.com/instructor-dashboard/my-assignment",
-]
-
 const Tools = () => {
   const versionInfo = useVersion()
 
@@ -50,7 +48,7 @@ const Tools = () => {
   const [showTools, setShowTools] = useState(false)
 
   useEffect(() => {
-    if (allowedPaths.includes(window.location.href)) setShowTools(true)
+    if (allowedPaths.includes(window.location.pathname)) setShowTools(true)
 
     chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
       if (request.action === "urlChange") {

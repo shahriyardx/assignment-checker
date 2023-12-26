@@ -4,6 +4,13 @@ import { insertFeedback } from "./feedback"
 import { showFeedbackBuilder } from "./html_helper"
 import { getJsonData, openFirstAssignment } from "./utils"
 
+export const allowedPaths = [
+  "/instructor-dashboard/assignments",
+  "/instructor-dashboard/my-assignment",
+  "/instructor-dashboard/mock-interview-my-student",
+  "/instructor-dashboard/mock-interview-completed"
+]
+
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.shiftKey && event.code == "Backslash") {
     showJsonLoader()
@@ -18,7 +25,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
     showFeedbackBuilder()
   }
 
-  if (window.location.pathname == "/instructor-dashboard/my-assignment") {
+  if (allowedPaths.includes(window.location.pathname)) {
     if (event.shiftKey && event.code == "KeyO") {
       openFirstAssignment()
     }
