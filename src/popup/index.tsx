@@ -15,6 +15,7 @@ function IndexPopup() {
       <div className="flex items-center gap-2 px-3 py-2 bg-zinc-800">
         {pages.map((page, index) => (
           <button
+            type="button"
             key={`${index}_n`}
             onClick={() => setCurrentPage(page)}
             className={`${
@@ -27,8 +28,8 @@ function IndexPopup() {
       </div>
 
       <main className="p-3 h-[166px]">
-        {currentPage == "Home" && <Home />}
-        {currentPage == "Update" && <Update />}
+        {currentPage === "Home" && <Home />}
+        {currentPage === "Update" && <Update />}
       </main>
     </div>
   )

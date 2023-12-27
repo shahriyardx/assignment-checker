@@ -1,6 +1,6 @@
-import cssText from "data-text:@/styles.css"
-import React, { useEffect, useState } from "react"
 import type { PlasmoCSConfig } from "plasmo"
+import React, { useEffect, useState } from "react"
+import cssText from "data-text:@/styles.css"
 
 import {
   ChevronLeft,
@@ -70,6 +70,7 @@ const Tools = () => {
     >
       <div className="absolute -translate-y-1/2 top-1/2 right-full">
         <button
+          type="button"
           className="py-5 text-white bg-zinc-900 rounded-l-md"
           onClick={() => setOpen(!open)}
         >
@@ -85,6 +86,7 @@ const Tools = () => {
           "
         >
           <button
+            type="button"
             className="relative hover:bg-zinc-700 rounded-tl-md group"
             onClick={() => {
               openFirstAssignment()
@@ -97,6 +99,7 @@ const Tools = () => {
             <ShortCut text="Shift + O" />
           </button>
           <button
+            type="button"
             className="relative hover:bg-zinc-700 group"
             onClick={insertFeedback}
           >
@@ -104,6 +107,7 @@ const Tools = () => {
             <ShortCut text="Shift + ]" />
           </button>
           <button
+            type="button"
             className="relative hover:bg-zinc-700 rounded-bl-md group"
             onClick={submitMarks}
           >
@@ -114,6 +118,7 @@ const Tools = () => {
           {versionInfo.latestVersion &&
             versionInfo.currentVersion !== versionInfo.latestVersion && (
               <button
+                type="button"
                 className="relative hover:bg-zinc-700 rounded-bl-md group"
                 onClick={() =>
                   chrome.runtime.sendMessage({
@@ -130,11 +135,11 @@ const Tools = () => {
     </div>
   )
 }
-
-export {}
 export const config: PlasmoCSConfig = {
   matches: ["https://web.programming-hero.com/instructor-dashboard/*"],
   all_frames: true,
 }
 
 export default Tools
+
+export {}

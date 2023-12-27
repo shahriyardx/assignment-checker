@@ -4,9 +4,10 @@ export const getRepos = (content: string) => {
   const githubRepoPattern = /https?:\/\/github\.com\/([^\s/]+)\/([^\s/]+)/g
   const matches: Repo[] = []
 
-  let match
-  while ((match = githubRepoPattern.exec(content)) !== null) {
+  let match = githubRepoPattern.exec(content)
+  while (match !== null) {
     matches.push({ owner: match[1], repoName: match[2], url: match[0] })
+    match = githubRepoPattern.exec(content)
   }
 
   return matches
@@ -60,7 +61,7 @@ async function getGitHubRepoInfo(repo: Repo, token: string) {
 export const getStats = async (repos: Repo[], token: string) => {
   const stats = []
   try {
-    for (let repo of repos) {
+    for (const repo of repos) {
       stats.push({
         ...repo,
         stats: await getGitHubRepoInfo(repo, token),

@@ -63,7 +63,7 @@ const sendUpdateNotification = ({
 
   chrome.notifications.onButtonClicked.addListener(
     (notificationId, buttonIndex) => {
-      if (notificationId === notificationId && buttonIndex === 0) {
+      if (notificationId === btnId && buttonIndex === 0) {
         chrome.tabs.create({
           url: RELEASE_URL,
         })

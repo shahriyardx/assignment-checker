@@ -43,7 +43,7 @@ export type OldJson = {
 
 export type Json = {
   type: string
-  sections: Section[],
+  sections: Section[]
   highestMark?: number
 }
 

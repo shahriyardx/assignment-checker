@@ -1,7 +1,7 @@
 import { getCurrentVersion, getLatestVersionInfo } from "@/utils"
-import { useEffect, useState } from "react"
 import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
+import { useEffect, useState } from "react"
 
 export type VersionInfo = {
   latestVersion: string | null
@@ -26,7 +26,7 @@ const useVersion = () => {
     currentVersion: getCurrentVersion(),
   })
 
-  const getUpdateInfo = async (force: boolean = false) => {
+  const getUpdateInfo = async (force = false) => {
     const { latestVersion, changelog } = await getLatestVersionInfo(force)
 
     setVersionInfo({
@@ -50,7 +50,7 @@ const useVersion = () => {
       }
       getUpdateInfo()
     })
-  }, [])
+  }, [getUpdateInfo])
 
   return { ...versionInfo, refetch }
 }

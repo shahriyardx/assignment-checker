@@ -71,7 +71,7 @@ const renderList = () => {
     jsonList?.append(listTitle)
   }
 
-  for (let json of jsons) {
+  for (const json of jsons) {
     const jsonContainer = document.createElement("div")
     jsonContainer.style.display = "flex"
     jsonContainer.style.gap = "5px"
@@ -80,12 +80,12 @@ const renderList = () => {
     title.textContent = json.filename
 
     const activeButton = getButton(
-      currentJson.filename == json.filename ? "Active" : "Activate",
+      currentJson.filename === json.filename ? "Active" : "Activate",
     )
     activeButton.style.backgroundColor =
-      currentJson.filename == json.filename ? "#6807ff" : "#dddddd"
+      currentJson.filename === json.filename ? "#6807ff" : "#dddddd"
     activeButton.style.color =
-      currentJson.filename == json.filename ? "white" : "black"
+      currentJson.filename === json.filename ? "white" : "black"
     activeButton.style.marginLeft = "auto"
 
     const removeButton = getButton("×")
@@ -120,7 +120,7 @@ export const enableJsonLoader = () => {
     const input = e.target as HTMLInputElement
     const reader = new FileReader()
 
-    reader.onload = function () {
+    reader.onload = () => {
       const jsonsData = localStorage.getItem("assignment-jsons")
       const jsons: Array<JsonData> = jsonsData ? JSON.parse(jsonsData) : []
 

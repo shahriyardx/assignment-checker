@@ -11,7 +11,7 @@ const Update = () => {
 
   return (
     <div className="h-full">
-      {versionInfo.currentVersion == versionInfo.latestVersion ? (
+      {versionInfo.currentVersion === versionInfo.latestVersion ? (
         <UpToDate versionInfo={versionInfo} />
       ) : (
         <NewVersionAvailable versionInfo={versionInfo} />

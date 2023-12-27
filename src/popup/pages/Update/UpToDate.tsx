@@ -1,5 +1,5 @@
-import React from "react"
 import moment from "moment"
+import React from "react"
 import type { VersionInfo } from "./useVersion"
 
 const UpToDate = ({
@@ -14,7 +14,9 @@ const UpToDate = ({
       <h3 className="text-lg font-semibold">Already up to date ⚡️</h3>
 
       <p className="mt-2">
-        <span className="text-white">Current Version:</span> {latestVersion}{" "}
+        <span className="text-white">Current Version:</span> {
+          latestVersion
+        }{" "}
       </p>
       <p>
         <span className="text-white">Last Update Check:</span>{" "}
@@ -23,6 +25,7 @@ const UpToDate = ({
 
       <div className="mt-auto">
         <button
+          type="button"
           onClick={() => refetch()}
           className="px-3 py-2 text-xs bg-indigo-500 hover:bg-indigo-600 text-white rounded-md"
         >

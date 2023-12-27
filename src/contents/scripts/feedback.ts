@@ -18,7 +18,7 @@ const feedbackFooter = `
   <b>Let's Code_ Your Career</b>
 `
 
-const notOKay = (msg?: string | null, mark: number = 0) => {
+const notOKay = (msg?: string | null, mark = 0) => {
   return `<em style='color:${mark > 0 ? "red" : "orange"};'>→ ${
     msg || "not okay"
   }</em>`
@@ -36,8 +36,8 @@ export const insertFeedback = () => {
   const submittedMark = totalMarkEl
     ? Number(totalMarkEl.value)
     : submittedMarkEL
-    ? Number(submittedMarkEL.textContent)
-    : 60
+      ? Number(submittedMarkEL.textContent)
+      : 60
 
   let highestMark = 0
 
@@ -47,7 +47,9 @@ export const insertFeedback = () => {
     const badge = document.querySelector(".badge")?.textContent
 
     if (badge) {
-      highestMark = parseInt(document.querySelector(".badge")?.textContent as string)
+      highestMark = parseInt(
+        document.querySelector(".badge")?.textContent as string,
+      )
     } else {
       highestMark = submittedMark
     }
@@ -109,7 +111,7 @@ export const insertFeedback = () => {
         }
 
         if (!allSubOk) {
-          reqMsg += "\n" + subReqMsg
+          reqMsg += `\n ${subReqMsg}`
         } else {
           reqMsg += ` → ${req.data.okayMessage}\n`
         }
@@ -124,7 +126,7 @@ export const insertFeedback = () => {
 
   let obtainedMark = marks
 
-  if (highestMark != submittedMark) {
+  if (highestMark !== submittedMark) {
     const numPercent = (marks / highestMark) * 100
     const obtainedMarkCeiled = Math.ceil(
       Number((submittedMark / 100) * numPercent),
@@ -143,9 +145,9 @@ export const insertFeedback = () => {
   markBox.focus()
   markBox.value = String(obtainedMark)
   markBox.addEventListener("keydown", (e) => {
-    if (e.shiftKey && e.code == "Enter") {
+    if (e.shiftKey && e.code === "Enter") {
       const submitButton = Array.from(document.querySelectorAll("button")).find(
-        (btn) => btn.textContent == "Submit",
+        (btn) => btn.textContent === "Submit",
       )
 
       if (submitButton) {

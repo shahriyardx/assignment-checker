@@ -60,7 +60,7 @@ export const showGithubStats = async () => {
     lastCommit.style.margin = "0px"
     commitCount.style.margin = "0px"
 
-    repoName.innerText = ">> " + stat.repoName
+    repoName.innerText = `>> ${stat.repoName}`
     lastCommit.innerHTML = `<b>last Commit:</b> ${stat.stats.lastCommitDate}`
     commitCount.innerHTML = `<b>Commit Count:</b> ${String(stat.stats.commits)}`
 

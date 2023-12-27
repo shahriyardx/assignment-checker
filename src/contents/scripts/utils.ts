@@ -3,7 +3,6 @@ import type {
   Json,
   OldJson,
   Requirement,
-  Section,
   SubRequirement,
 } from "./types"
 
@@ -71,7 +70,7 @@ export const getJsonData = () => {
 
   const assignmentData = assignmentJson.data
 
-  if (assignmentData.type == "new") {
+  if (assignmentData.type === "new") {
     return assignmentData as Json
   }
 
@@ -91,7 +90,10 @@ export const openFirstAssignment = () => {
 
 export const submitMarks = () => {
   const submitButton = Array.from(document.querySelectorAll("button")).find(
-    (btn) => btn.textContent == "Submit" || btn.textContent == "Update Mark",
+    (btn) =>
+      btn.textContent === "Submit" ||
+      btn.textContent === "Update Mark" ||
+      btn.textContent === "Update",
   )
 
   if (submitButton) {

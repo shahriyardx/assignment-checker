@@ -11,6 +11,7 @@ const NewVersionAvailable = ({ versionInfo }: { versionInfo: VersionInfo }) => {
       <h3 className="text-2xl font-bold">⬇ Update Available</h3>
       <p>{latestVersion}</p>
       <button
+        type="button"
         onClick={() =>
           chrome.tabs.create({
             url: RELEASE_URL,

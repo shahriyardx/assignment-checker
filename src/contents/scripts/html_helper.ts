@@ -74,11 +74,11 @@ const wrap = (
   properties: Record<string, any> = {},
 ) => {
   const el = document.createElement(abbr)
-  for (let [key, val] of Object.entries(properties)) {
+  for (const [key, val] of Object.entries(properties)) {
     el.setAttribute(key, val)
   }
 
-  for (let item of elements) {
+  for (const item of elements) {
     el.appendChild(item)
   }
 
@@ -86,7 +86,7 @@ const wrap = (
 }
 
 const appendChild = (container: Element, childs: Array<Element>) => {
-  for (let child of childs) {
+  for (const child of childs) {
     container.appendChild(child)
   }
 }

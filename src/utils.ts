@@ -6,7 +6,7 @@ export const getCurrentVersion = () => {
   return `v${chrome.runtime.getManifest().version}`
 }
 
-export const shouldCheckForUpdate = async (force: boolean = false) => {
+export const shouldCheckForUpdate = async (force = false) => {
   const currentDateTime = new Date()
 
   if (force) {
@@ -29,7 +29,7 @@ export const shouldCheckForUpdate = async (force: boolean = false) => {
   return true
 }
 
-export const getLatestVersionInfo = async (force: boolean = false) => {
+export const getLatestVersionInfo = async (force = false) => {
   if (!(await shouldCheckForUpdate(force))) {
     const latestVersion = await storage.get("latestVersion")
     const changelog = await storage.get("changelog")
@@ -39,7 +39,7 @@ export const getLatestVersionInfo = async (force: boolean = false) => {
 
   const data = await (
     await fetch(
-      `https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest`,
+      "https://api.github.com/repos/shahriyardx/assignment-checker/releases/latest",
     )
   ).json()
 
