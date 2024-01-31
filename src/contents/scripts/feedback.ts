@@ -13,8 +13,6 @@ const feedbackFooter = `
   <b style="color: red;">We have a recheck option, so please refrain from posting to the group.</b>
   <i style="color: green;">If your recheck reason is valid you will get marks, if not valid 2 marks will be deducted.</i>
 
-  How to Recheck: <a href="https://1drv.ms/b/s!AsHwkj6t2abplhxnqigzCy2IwmLu?e=4JeV37">https://1drv.ms/b/s!AsHwkj6t2abplhxnqigzCy2IwmLu?e=4JeV37</a>
-  
   <b>Let's Code_ Your Career</b>
 `
 
