@@ -1,7 +1,7 @@
 {
   "name": "assignment-checker",
   "displayName": "Phero Assignment checker",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Assignment checker extensin for Programming Hero instructors",
   "author": "Md Shahriyar Alam <contact@shahriyar.dev>",
   "scripts": {
