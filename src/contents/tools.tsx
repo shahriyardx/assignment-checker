@@ -43,31 +43,10 @@ const ShortCut = ({ text }: { text: string }) => {
 
 const Tools = () => {
   const versionInfo = useVersion()
-
   const [open, setOpen] = useState(false)
-  const [showTools, setShowTools] = useState(false)
-
-  useEffect(() => {
-    if (allowedPaths.includes(window.location.pathname)) setShowTools(true)
-
-    chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
-      if (request.action === "urlChange") {
-        if (allowedPaths.includes(request.url)) {
-          setShowTools(true)
-        } else {
-          setShowTools(false)
-        }
-      }
-      sendResponse({ received: true })
-    })
-  }, [])
 
   return (
-    <div
-      className={`fixed right-0 -translate-y-1/2 top-1/2 ${
-        !showTools && "hidden"
-      }`}
-    >
+    <div className={"fixed right-0 -translate-y-1/2 top-1/2"}>
       <div className="absolute -translate-y-1/2 top-1/2 right-full">
         <button
           type="button"
@@ -123,7 +102,7 @@ const Tools = () => {
                 onClick={() =>
                   chrome.runtime.sendMessage({
                     action: "createTab",
-                    url: `${RELEASE_URL}/${versionInfo.latestVersion}`,
+                    url: `${RELEASE_URL}`,
                   })
                 }
               >

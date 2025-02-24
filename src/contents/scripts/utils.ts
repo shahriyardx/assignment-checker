@@ -1,6 +1,8 @@
 import type {
   AssignmentData,
+  CodeJson,
   Json,
+  JSONDATA,
   OldJson,
   Requirement,
   SubRequirement,
@@ -71,10 +73,14 @@ export const getJsonData = () => {
   const assignmentData = assignmentJson.data
 
   if (assignmentData.type === "new") {
-    return assignmentData as Json
+    return assignmentData as JSONDATA
   }
 
-  return legacyToNew(assignmentData as OldJson) as Json
+  if (assignmentData.type === "code") {
+    return assignmentData as JSONDATA
+  }
+
+  return legacyToNew(assignmentData as OldJson) as JSONDATA
 }
 
 export const openFirstAssignment = () => {

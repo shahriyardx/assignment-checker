@@ -1,5 +1,5 @@
-import { insertFeedback } from "./feedback"
-import type { Requirement, Section, SubRequirement } from "./types"
+import { insertFeedback, insertFeedbackCode } from "./feedback"
+import type { CodeJson, Requirement, Section, SubRequirement } from "./types"
 import { getJsonData } from "./utils"
 
 const getCustomFeedbackEl = (uniqueId: string) => {
@@ -208,8 +208,36 @@ export const getCustomFeedback = (
   ]
 }
 
+const evalStudentSubmission = async (json: CodeJson) => {
+  const rawSubmission = document.getElementsByClassName("col-12 col-md-11")
+  // @ts-expect-error
+  const studentSubmisson = rawSubmission[10].innerText
+
+  fetch("http://localhost:3000/api/extension/eval", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      code: studentSubmisson,
+      jsonData: json,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      insertFeedbackCode(data as { feedback: string; totalMarks: number })
+    })
+}
+
 export const showFeedbackBuilder = () => {
-  const sections = getJsonData().sections
+  const jsonData = getJsonData()
+
+  if (jsonData.type === "code") {
+    evalStudentSubmission(jsonData as CodeJson)
+    return
+  }
+
+  const sections = jsonData.sections
 
   const feedbackBox = document.querySelector(".feedback-box")
 

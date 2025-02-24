@@ -47,6 +47,30 @@ export type Json = {
   highestMark?: number
 }
 
+export type CodeJson = {
+  type: string
+  functions: {
+    name: string
+    testCases: { input: any[]; output: any }[]
+  }[]
+  highestMark: number
+}
+
+export type JSONDATA =
+  | {
+      type?: "new"
+      sections: Section[]
+      highestMark?: number
+    }
+  | {
+      type: "code"
+      functions: {
+        name: string
+        testCases: { input: any[]; output: any }[]
+      }[]
+      highestMark?: number
+    }
+
 export type AssignmentData = {
   fileanme: string
   data: Json | OldJson

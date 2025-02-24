@@ -1,0 +1,97 @@
+{
+  "type": "code",
+  "functions": [
+    {
+      "name": "cashOut",
+      "testCases": [
+        { "input": 2000, "output": 35, "type": "output" },
+        { "input": 100, "output": 1.75, "type": "output" },
+        { "input": 0, "output": 0, "type": "output" },
+        { "input": "validation", "output": "string", "type": "validation" }
+      ]
+    },
+    {
+      "name": "validEmail",
+      "testCases": [
+        { "input": "mahmud12@gmail.com", "output": true, "type": "output" },
+        { "input": "-king@yahoo.com", "output": false, "type": "output" },
+        {
+          "input": "jhankar@hero.coom",
+          "output": "string",
+          "type": "validation"
+        }
+      ]
+    },
+    {
+      "name": "electionResult",
+      "testCases": [
+        {
+          "input": ["banana", "banana", "age e valo chilam", "no"],
+          "output": "Banana",
+          "type": "output"
+        },
+        {
+          "input": ["mango", "banana", "mango", "banana", "mango"],
+          "output": "Mango",
+          "type": "output"
+        },
+        {
+          "input": ["mango", "banana", "jaker party", "nope"],
+          "output": "Draw",
+          "type": "output"
+        },
+        { "input": "validation", "output": "string", "type": "validation" }
+      ]
+    },
+    {
+      "name": "isBestFriend",
+      "testCases": [
+        {
+          "input": [
+            { "name": "hashem", "roll": 1, "bestFriend": 2 },
+            { "name": "kashem", "roll": 2, "bestFriend": 1 }
+          ],
+          "output": true,
+          "type": "output"
+        },
+        {
+          "input": [
+            { "name": "hashem", "roll": 21, "bestFriend": 1 },
+            { "name": "kashem", "roll": 1, "bestFriend": 2 }
+          ],
+          "output": false,
+          "type": "output"
+        },
+        {
+          "input": [
+            { "name": "hashem", "roll": 21, "bestFriend": 11 },
+            { "name": "kashem", "roll": 1, "bestFriend": 21 }
+          ],
+          "output": false,
+          "type": "output"
+        },
+        {
+          "input": [{ "name": "hashem", "roll": 21, "bestFriend": 11 }, "idk"],
+          "output": "string",
+          "type": "validation"
+        }
+      ]
+    },
+    {
+      "name": "calculateWatchTime",
+      "testCases": [
+        {
+          "input": [100, 99, 119, 300],
+          "output": { "hour": 0, "minute": 10, "second": 18 },
+          "type": "output"
+        },
+        {
+          "input": [],
+          "output": { "hour": 0, "minute": 0, "second": 0 },
+          "type": "output"
+        },
+        { "input": [100, 3800, "90"], "output": "string", "type": "validation" }
+      ]
+    }
+  ]
+}
