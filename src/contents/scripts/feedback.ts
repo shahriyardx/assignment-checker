@@ -1,9 +1,8 @@
 import { getCustomFeedback, getInputChecked } from "./html_helper"
-import type { BaseRequirement, Requirement } from "./types"
+import type { BaseRequirement, CodeJson, Json, JSONDATA, Requirement } from "./types"
 import { getJsonData } from "./utils"
 
-const feedbackFooter = `
-  <strong>Important Instructions:</strong> 
+const feedbackFooter = `<strong>Important Instructions:</strong> 
   → Do not post on Facebook, if you have any marks-related issues.
   → Make sure to read all the requirements carefully, If you have any marks-related confusion.
   → If you are confident and If there is a mistake from the examiner's end, give a recheck request.
@@ -13,7 +12,7 @@ const feedbackFooter = `
   <b style="color: red;">We have a recheck option, so please refrain from posting to the group.</b>
   <i style="color: green;">If your recheck reason is valid you will get marks, if not valid 2 marks will be deducted.</i>
 
-  <b>Let's Code_ Your Career</b>
+  <strong>Let's Code_ Your Career</strong>
 `
 
 const notOKay = (msg?: string | null, mark = 0) => {
@@ -22,13 +21,7 @@ const notOKay = (msg?: string | null, mark = 0) => {
   }</em>`
 }
 
-export const insertFeedback = () => {
-  const insertBtn = document.getElementById("insert-button")
-  if (!insertBtn) return
-
-  const jsonData = getJsonData()
-  const sections = jsonData.sections
-
+const getSubmittedMark = () => {
   const submittedMarkEL = document.querySelector(".font-weight-bold.pl-2")
   const totalMarkEl = document.querySelector("#TotalMark") as HTMLInputElement
   const submittedMark = totalMarkEl
@@ -36,9 +29,12 @@ export const insertFeedback = () => {
     : submittedMarkEL
       ? Number(submittedMarkEL.textContent)
       : 60
+    
+  return submittedMark
+}
 
+const getHighestMark = (submittedMark: number, jsonData: JSONDATA) => {
   let highestMark = 0
-
   if (jsonData.highestMark) {
     highestMark = Number(jsonData.highestMark)
   } else {
@@ -52,6 +48,27 @@ export const insertFeedback = () => {
       highestMark = submittedMark
     }
   }
+
+  return highestMark
+}
+
+export const insertFeedbackCode = (data: { feedback: string, totalMarks: number }) => {
+  const jsonData = getJsonData() as CodeJson
+  const submittedMark = getSubmittedMark()
+  const highestMark = getHighestMark(submittedMark, jsonData as JSONDATA)
+
+  insertFeedbackToDom(highestMark, submittedMark, data.totalMarks, data.feedback)
+}
+
+export const insertFeedback = () => {
+  const insertBtn = document.getElementById("insert-button")
+  if (!insertBtn) return
+
+  const jsonData = getJsonData() as Json
+  const sections = jsonData.sections
+  const submittedMark = getSubmittedMark()
+  const highestMark = getHighestMark(submittedMark, jsonData as JSONDATA)
+ 
 
   let feedback = ""
   let marks = highestMark
@@ -120,10 +137,13 @@ export const insertFeedback = () => {
     feedback += "\n"
   }
 
-  feedback += feedbackFooter
+  insertFeedbackToDom(highestMark, submittedMark, marks, feedback)
+}
 
+const insertFeedbackToDom = (highestMark: number, submittedMark: number, marks: number, feedback: string) => {
   let obtainedMark = marks
 
+  console.log(highestMark)
   if (highestMark !== submittedMark) {
     const numPercent = (marks / highestMark) * 100
     const obtainedMarkCeiled = Math.ceil(
@@ -134,7 +154,7 @@ export const insertFeedback = () => {
 
   const textArea = document.querySelector(".ql-editor p")
   if (textArea) {
-    textArea.innerHTML = feedback
+    textArea.innerHTML = `${feedback}\n\n${feedbackFooter}`
   }
 
   const markBox = document.querySelector("#Mark") as HTMLInputElement
