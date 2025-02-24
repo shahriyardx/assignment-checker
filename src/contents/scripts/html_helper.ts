@@ -2,6 +2,7 @@ import { insertFeedback, insertFeedbackCode } from "./feedback"
 import type { CodeJson, Requirement, Section, SubRequirement } from "./types"
 import { getJsonData } from "./utils"
 
+
 const getCustomFeedbackEl = (uniqueId: string) => {
   const customFeedback = document.createElement("div")
   customFeedback.id = `${uniqueId}_custom_feedback`
@@ -213,7 +214,7 @@ const evalStudentSubmission = async (json: CodeJson) => {
   // @ts-expect-error
   const studentSubmisson = rawSubmission[10].innerText
 
-  fetch("http://localhost:3000/api/extension/eval", {
+  fetch("https://json-hub.shahriyar.dev/api/extension/eval", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -225,7 +226,7 @@ const evalStudentSubmission = async (json: CodeJson) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      insertFeedbackCode(data as { feedback: string; totalMarks: number })
+      insertFeedbackCode(data as { feedback: string, totalMarks: number })
     })
 }
 
