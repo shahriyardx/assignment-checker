@@ -1,5 +1,11 @@
 import { getCustomFeedback, getInputChecked } from "./html_helper"
-import type { BaseRequirement, CodeJson, Json, JSONDATA, Requirement } from "./types"
+import type {
+  BaseRequirement,
+  CodeJson,
+  Json,
+  JSONDATA,
+  Requirement,
+} from "./types"
 import { getJsonData } from "./utils"
 
 const feedbackFooter = `<strong>Important Instructions:</strong> 
@@ -29,7 +35,7 @@ const getSubmittedMark = () => {
     : submittedMarkEL
       ? Number(submittedMarkEL.textContent)
       : 60
-    
+
   return submittedMark
 }
 
@@ -52,12 +58,20 @@ const getHighestMark = (submittedMark: number, jsonData: JSONDATA) => {
   return highestMark
 }
 
-export const insertFeedbackCode = (data: { feedback: string, totalMarks: number }) => {
+export const insertFeedbackCode = (data: {
+  feedback: string
+  totalMarks: number
+}) => {
   const jsonData = getJsonData() as CodeJson
   const submittedMark = getSubmittedMark()
   const highestMark = getHighestMark(submittedMark, jsonData as JSONDATA)
 
-  insertFeedbackToDom(highestMark, submittedMark, data.totalMarks, data.feedback)
+  insertFeedbackToDom(
+    highestMark,
+    submittedMark,
+    data.totalMarks,
+    data.feedback,
+  )
 }
 
 export const insertFeedback = () => {
@@ -68,7 +82,6 @@ export const insertFeedback = () => {
   const sections = jsonData.sections
   const submittedMark = getSubmittedMark()
   const highestMark = getHighestMark(submittedMark, jsonData as JSONDATA)
- 
 
   let feedback = ""
   let marks = highestMark
@@ -140,7 +153,12 @@ export const insertFeedback = () => {
   insertFeedbackToDom(highestMark, submittedMark, marks, feedback)
 }
 
-const insertFeedbackToDom = (highestMark: number, submittedMark: number, marks: number, feedback: string) => {
+const insertFeedbackToDom = (
+  highestMark: number,
+  submittedMark: number,
+  marks: number,
+  feedback: string,
+) => {
   let obtainedMark = marks
 
   console.log(highestMark)

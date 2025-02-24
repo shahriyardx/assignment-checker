@@ -74,8 +74,8 @@ export const getJsonData = () => {
 
   if (assignmentData.type === "new") {
     return assignmentData as JSONDATA
-  } 
-  
+  }
+
   if (assignmentData.type === "code") {
     return assignmentData as JSONDATA
   }

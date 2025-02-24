@@ -2,7 +2,6 @@ import { insertFeedback, insertFeedbackCode } from "./feedback"
 import type { CodeJson, Requirement, Section, SubRequirement } from "./types"
 import { getJsonData } from "./utils"
 
-
 const getCustomFeedbackEl = (uniqueId: string) => {
   const customFeedback = document.createElement("div")
   customFeedback.id = `${uniqueId}_custom_feedback`
@@ -226,7 +225,7 @@ const evalStudentSubmission = async (json: CodeJson) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      insertFeedbackCode(data as { feedback: string, totalMarks: number })
+      insertFeedbackCode(data as { feedback: string; totalMarks: number })
     })
 }
 
