@@ -151,13 +151,10 @@ export const showJsonLoader = async () => {
       const title = document.createElement("span")
       title.textContent = filename
 
-      const downloadButton = document.createElement("button")
-      downloadButton.textContent = "Download"
+      const downloadButton = getButton("Load")
       downloadButton.style.marginLeft = "auto"
-      downloadButton.style.backgroundColor = "green"
+      downloadButton.style.backgroundColor = "#6807ff"
       downloadButton.style.color = "#fff"
-      downloadButton.style.borderRadius = "5px"
-      downloadButton.style.padding = "5px"
       downloadButton.addEventListener("click", () => {
         appendJson(json.data, filename)
       })
