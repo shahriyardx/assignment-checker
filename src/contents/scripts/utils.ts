@@ -106,3 +106,7 @@ export const submitMarks = () => {
     submitButton.click()
   }
 }
+
+
+// export const BASE_URL = "http://localhost:3000"
+export const BASE_URL = "https://json-hub.shahriyar.dev"

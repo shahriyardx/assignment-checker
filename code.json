@@ -7,7 +7,7 @@
         { "input": 2000, "output": 35, "type": "output" },
         { "input": 100, "output": 1.75, "type": "output" },
         { "input": 0, "output": 0, "type": "output" },
-        { "input": "validation", "output": "string", "type": "validation" }
+        { "input": "101", "output": "Invalid", "type": "validation" }
       ]
     },
     {
@@ -16,8 +16,8 @@
         { "input": "mahmud12@gmail.com", "output": true, "type": "output" },
         { "input": "-king@yahoo.com", "output": false, "type": "output" },
         {
-          "input": "jhankar@hero.coom",
-          "output": "string",
+          "input": true,
+          "output": "Invalid",
           "type": "validation"
         }
       ]
@@ -40,7 +40,7 @@
           "output": "Draw",
           "type": "output"
         },
-        { "input": "validation", "output": "string", "type": "validation" }
+        { "input": "mango , banana", "output": "Invalid", "type": "validation" }
       ]
     },
     {
@@ -71,8 +71,11 @@
           "type": "output"
         },
         {
-          "input": [{ "name": "hashem", "roll": 21, "bestFriend": 11 }, "idk"],
-          "output": "string",
+          "input": [
+            { "name": "hashem", "roll": 21, "bestFriend": 11 },
+            "Kashem er bestfriend nai"
+          ],
+          "output": "Invalid",
           "type": "validation"
         }
       ]
@@ -90,7 +93,11 @@
           "output": { "hour": 0, "minute": 0, "second": 0 },
           "type": "output"
         },
-        { "input": [100, 3800, "90"], "output": "string", "type": "validation" }
+        {
+          "input": [100, 3800, "90"],
+          "output": "Invalid",
+          "type": "validation"
+        }
       ]
     }
   ]
