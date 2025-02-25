@@ -210,9 +210,17 @@ export const getCustomFeedback = (
 }
 
 const evalStudentSubmission = async (json: CodeJson) => {
-  const rawSubmission = document.getElementsByClassName("col-12 col-md-11")
-  // @ts-expect-error
-  const studentSubmisson = rawSubmission[10].innerText
+  const rawSubmission = document.getElementsByClassName("col-12 col-md-11") as HTMLCollection
+
+  let studentSubmisson = ""
+  const codePriority = document.querySelector(".cp") as HTMLDivElement
+
+  if (codePriority) {
+      studentSubmisson = codePriority.innerText
+  } else {
+    // @ts-expect-error HTMLCollectionOf<HTMLDivElement>
+    studentSubmisson = rawSubmission[rawSubmission.length - 1].innerText
+  }
 
   fetch(`${BASE_URL}/api/extension/eval`, {
     method: "POST",
