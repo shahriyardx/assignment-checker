@@ -1,6 +1,6 @@
 import { insertFeedback, insertFeedbackCode } from "./feedback"
 import type { CodeJson, Requirement, Section, SubRequirement } from "./types"
-import { getJsonData } from "./utils"
+import { BASE_URL, getJsonData } from "./utils"
 
 
 const getCustomFeedbackEl = (uniqueId: string) => {
@@ -214,7 +214,7 @@ const evalStudentSubmission = async (json: CodeJson) => {
   // @ts-expect-error
   const studentSubmisson = rawSubmission[10].innerText
 
-  fetch("https://json-hub.shahriyar.dev/api/extension/eval", {
+  fetch(`${BASE_URL}/api/extension/eval`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

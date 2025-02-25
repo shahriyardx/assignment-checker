@@ -1,5 +1,6 @@
 import { type JsonData } from "./types"
 import { kebabCase } from "lodash"
+import { BASE_URL } from "./utils"
 
 const getButton = (content: string) => {
   const btn = document.createElement("button")
@@ -57,7 +58,7 @@ export const showJsonLoader = async () => {
   container.insertAdjacentElement("afterbegin", div)
 
   const batchesResponse = await fetch(
-    "https://json-hub.shahriyar.dev/api/extension/batches",
+    `${BASE_URL}/api/extension/batches`,
   )
   const batches = (await batchesResponse.json()) as {
     id: string
@@ -84,7 +85,7 @@ export const showJsonLoader = async () => {
     const batchId = target.value
 
     const assignmentResponse = await fetch(
-      `https://json-hub.shahriyar.dev/api/extension/batches/${batchId}`,
+      `${BASE_URL}/api/extension/batches/${batchId}`,
     )
     const assignments = (await assignmentResponse.json()) as {
       id: string
@@ -119,7 +120,7 @@ export const showJsonLoader = async () => {
     const assignmentId = target.value
 
     const assignmentJsonResponse = await fetch(
-      `https://json-hub.shahriyar.dev/api/extension/assignments/${assignmentId}`,
+      `${BASE_URL}/api/extension/assignments/${assignmentId}`,
     )
     const jsons = (await assignmentJsonResponse.json()) as {
       data: string
