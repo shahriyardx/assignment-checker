@@ -107,6 +107,7 @@ export const submitMarks = () => {
   }
 }
 
-
-// export const BASE_URL = "http://localhost:3000"
-export const BASE_URL = "https://json-hub.shahriyar.dev"
+export const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://json-hub.shahriyar.dev"

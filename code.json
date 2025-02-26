@@ -5,9 +5,25 @@
       "name": "cashOut",
       "testCases": [
         { "input": 2000, "output": 35, "type": "output" },
-        { "input": 100, "output": 1.75, "type": "output" },
+        {
+          "input": 100,
+          "output": {
+            "matchType": "range",
+            "value": [1.75, 1.76],
+            "example": 1.75
+          },
+          "type": "output"
+        },
         { "input": 0, "output": 0, "type": "output" },
-        { "input": "101", "output": "Invalid", "type": "validation" }
+        {
+          "input": "101",
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
+          "type": "validation"
+        }
       ]
     },
     {
@@ -17,7 +33,11 @@
         { "input": "-king@yahoo.com", "output": false, "type": "output" },
         {
           "input": true,
-          "output": "Invalid",
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
           "type": "validation"
         }
       ]
@@ -26,21 +46,38 @@
       "name": "electionResult",
       "testCases": [
         {
-          "input": ["banana", "banana", "age e valo chilam", "no"],
-          "output": "Banana",
+          "input": [["banana", "banana", "age e valo chilam", "no"]],
+          "output": {
+            "matchType": "includes",
+            "value": "Banana"
+          },
           "type": "output"
         },
         {
-          "input": ["mango", "banana", "mango", "banana", "mango"],
-          "output": "Mango",
+          "input": [["mango", "banana", "mango", "banana", "mango"]],
+          "output": {
+            "matchType": "includes",
+            "value": "Mango"
+          },
           "type": "output"
         },
         {
-          "input": ["mango", "banana", "jaker party", "nope"],
-          "output": "Draw",
+          "input": [["mango", "banana", "jaker party", "nope"]],
+          "output": {
+            "matchType": "includes",
+            "value": "Draw"
+          },
           "type": "output"
         },
-        { "input": "mango , banana", "output": "Invalid", "type": "validation" }
+        {
+          "input": "mango , banana",
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
+          "type": "validation"
+        }
       ]
     },
     {
@@ -75,7 +112,11 @@
             { "name": "hashem", "roll": 21, "bestFriend": 11 },
             "Kashem er bestfriend nai"
           ],
-          "output": "Invalid",
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
           "type": "validation"
         }
       ]
@@ -84,18 +125,22 @@
       "name": "calculateWatchTime",
       "testCases": [
         {
-          "input": [100, 99, 119, 300],
+          "input": [[100, 99, 119, 300]],
           "output": { "hour": 0, "minute": 10, "second": 18 },
           "type": "output"
         },
         {
-          "input": [],
+          "input": [[]],
           "output": { "hour": 0, "minute": 0, "second": 0 },
           "type": "output"
         },
         {
-          "input": [100, 3800, "90"],
-          "output": "Invalid",
+          "input": [[100, 3800, "90"]],
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
           "type": "validation"
         }
       ]
