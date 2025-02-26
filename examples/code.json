@@ -9,7 +9,7 @@
           "input": 100,
           "output": {
             "matchType": "range",
-            "value": [1.75, 1.76],
+            "value": [1.75, 1.751],
             "example": 1.75
           },
           "type": "output"
