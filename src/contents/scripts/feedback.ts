@@ -102,7 +102,7 @@ export const insertFeedback = () => {
         const [cf, cn] = getCustomFeedback(reqId)
 
         feedback += `${globalIndex}. ${req.data.description} ${notOKay(
-          cf || req.data.notOkayMessage,
+          cf || "not okay",
           Number(req.data.number),
         )}\n`
 
@@ -132,7 +132,7 @@ export const insertFeedback = () => {
             }
 
             subReqMsg += ` └─ ${subReq.description} ${notOKay(
-              cf || subReq.notOkayMessage,
+              cf || "not okay",
               Number(subReq.number),
             )}\n`
           }
