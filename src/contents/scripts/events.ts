@@ -1,9 +1,8 @@
-import { getSettings, type LocalSettings } from "@/hooks"
+import { getSettings } from "@/hooks"
 import { insertFeedback } from "./feedback"
-import { showGithubStats } from "./github"
 import { showFeedbackBuilder } from "./html_helper"
 import { showJsonLoader } from "./loader"
-import { getJsonData, openFirstAssignment, submitMarks } from "./utils"
+import { openFirstAssignment } from "./utils"
 
 export const allowedPaths = [
   "/instructor-dashboard/assignments",
@@ -53,6 +52,18 @@ const handleKeyDown = async (event: KeyboardEvent) => {
 
     if (submitButton) {
       submitButton.click()
+      setTimeout(() => {
+        openFirstAssignment(() => {
+          setTimeout(() => {
+            const okButton = Array.from(
+              document.querySelectorAll("button"),
+            ).find((btn) => btn.textContent === "OK")
+
+            if (okButton) okButton.click()
+            showFeedbackBuilder()
+          }, 1000)
+        })
+      }, 2000)
     }
   }
 }
