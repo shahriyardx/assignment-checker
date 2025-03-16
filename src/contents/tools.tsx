@@ -1,24 +1,13 @@
 import type { PlasmoCSConfig } from "plasmo"
-import React, { useEffect, useState } from "react"
+import React, { useState, type ComponentProps } from "react"
 import cssText from "data-text:@/styles.css"
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  DownloadCloud,
-  Eye,
-  Focus,
-  Save,
-} from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { insertFeedback } from "./scripts/feedback"
 import { showFeedbackBuilder } from "./scripts/html_helper"
 import { openFirstAssignment, submitMarks } from "./scripts/utils"
-
-import { RELEASE_URL } from "@/utils"
-import { allowedPaths } from "./scripts/events"
-
-import useVersion from "@/popup/pages/Update/useVersion"
+import { useCurrentPath, useExtensionSettings } from "@/hooks"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -26,24 +15,9 @@ export const getStyle = () => {
   return style
 }
 
-const ShortCut = ({ text }: { text: string }) => {
-  return (
-    <span
-      className="
-        absolute p-2 pointer-events-none text-white 
-        bg-black right-[106px] whitespace-nowrap 
-        rounded-md top-1/2 -translate-y-1/2 hidden 
-        group-hover:block
-      "
-    >
-      {text}
-    </span>
-  )
-}
-
 const Tools = () => {
-  const versionInfo = useVersion()
   const [open, setOpen] = useState(false)
+  const currentPath = useCurrentPath()
 
   return (
     <div className={"fixed right-0 -translate-y-1/2 top-1/2"}>
@@ -64,56 +38,51 @@ const Tools = () => {
             [&>button]:flex [&>button]:items-center [&>button]:gap-2
           "
         >
-          <button
-            type="button"
-            className="relative hover:bg-zinc-700 rounded-tl-md group"
+          <ToolButton
             onClick={() => {
-              openFirstAssignment()
-              setTimeout(() => {
-                showFeedbackBuilder()
-              }, 100)
+              openFirstAssignment(() =>
+                setTimeout(() => {
+                  showFeedbackBuilder()
+                }, 100),
+              )
             }}
           >
-            <Eye /> <span>Open</span>
-            <ShortCut text="Shift + O" />
-          </button>
-          <button
+            Open Assignment
+          </ToolButton>
+          <ToolButton
             type="button"
             className="relative hover:bg-zinc-700 group"
             onClick={insertFeedback}
           >
-            <Focus /> <span>Insert</span>
-            <ShortCut text="Shift + ]" />
-          </button>
-          <button
+            Insert Feedback
+          </ToolButton>
+          <ToolButton
             type="button"
             className="relative hover:bg-zinc-700 rounded-bl-md group"
             onClick={submitMarks}
           >
-            <Save /> <span>Submit</span>
-            <ShortCut text="Shift + Enter" />
-          </button>
-
-          {versionInfo.latestVersion &&
-            versionInfo.currentVersion !== versionInfo.latestVersion && (
-              <button
-                type="button"
-                className="relative hover:bg-zinc-700 rounded-bl-md group"
-                onClick={() =>
-                  chrome.runtime.sendMessage({
-                    action: "createTab",
-                    url: `${RELEASE_URL}`,
-                  })
-                }
-              >
-                <DownloadCloud /> <span>Update</span>
-              </button>
-            )}
+            Submit
+          </ToolButton>
         </div>
       )}
     </div>
   )
 }
+
+type ToolButtonProps = ComponentProps<"button">
+
+const ToolButton = ({ children, ...props }: ToolButtonProps) => {
+  return (
+    <button
+      type="button"
+      {...props}
+      className="px-3 py-2 hover:bg-zinc-600 rounded-md flex items-center gap-2 text-xs"
+    >
+      {children}
+    </button>
+  )
+}
+
 export const config: PlasmoCSConfig = {
   matches: ["https://web.programming-hero.com/instructor-dashboard/*"],
   all_frames: true,

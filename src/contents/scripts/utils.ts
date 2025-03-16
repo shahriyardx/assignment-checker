@@ -24,7 +24,6 @@ const legacyToNew = (json: { [key: string]: any }) => {
         const subreqs: SubRequirement[] = []
 
         for (const key in requirement) {
-          console.log(key)
           if (key.startsWith("sub_req_")) {
             const subReq = requirement[key]
 
@@ -83,7 +82,7 @@ export const getJsonData = () => {
   return legacyToNew(assignmentData as OldJson) as JSONDATA
 }
 
-export const openFirstAssignment = () => {
+export const openFirstAssignment = (callback?: CallableFunction) => {
   if (document.querySelector(".assignment-evaluation-form")) return
   const assignment = document.querySelector(
     ".btn.btn-icon.btn-eye-icon",
@@ -91,6 +90,7 @@ export const openFirstAssignment = () => {
 
   if (assignment) {
     assignment.click()
+    callback()
   }
 }
 
@@ -107,6 +107,7 @@ export const submitMarks = () => {
   }
 }
 
-
-// export const BASE_URL = "http://localhost:3000"
-export const BASE_URL = "https://json-hub.shahriyar.dev"
+export const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "https://json-hub.shahriyar.dev"
+    : "https://json-hub.shahriyar.dev"

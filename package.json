@@ -1,7 +1,7 @@
 {
   "name": "assignment-checker",
   "displayName": "Phero Assignment checker",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Assignment checker extensin for Programming Hero instructors",
   "author": "Md Shahriyar Alam <contact@shahriyar.dev>",
   "scripts": {
@@ -22,7 +22,7 @@
     "@biomejs/biome": "^1.4.1",
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@types/chrome": "0.0.251",
-    "@types/lodash": "^4.17.15",
+    "@types/lodash": "^4.17.16",
     "@types/node": "20.9.0",
     "@types/react": "18.2.37",
     "@types/react-dom": "18.2.15",

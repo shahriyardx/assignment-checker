@@ -1,8 +1,8 @@
+import { getSettings } from "@/hooks"
 import { insertFeedback } from "./feedback"
-import { showGithubStats } from "./github"
 import { showFeedbackBuilder } from "./html_helper"
 import { showJsonLoader } from "./loader"
-import { getJsonData, openFirstAssignment } from "./utils"
+import { openFirstAssignment } from "./utils"
 
 export const allowedPaths = [
   "/instructor-dashboard/assignments",
@@ -11,33 +11,59 @@ export const allowedPaths = [
   "/instructor-dashboard/mock-interview-completed",
 ]
 
-const handleKeyDown = (event: KeyboardEvent) => {
+const handleKeyDown = async (event: KeyboardEvent) => {
   if (event.shiftKey && event.code === "Backslash") {
     showJsonLoader()
   }
 
-  if (event.shiftKey && event.code === "KeyP") {
-    const data = getJsonData()
-    console.log(data)
+  const settings = await getSettings()
+
+  const mapText = `${
+    event.shiftKey ? "Shift + " : event.altKey ? "Alt + " : ""
+  } ${event.key}`
+
+  const openShortCut = settings.openAssignmentShortcut?.text || "Shift + O"
+  const insertShortCut = settings.insertFeedbackShortcut?.text || "Shift + }"
+  const submitShortcut = settings.submitMarksShortcut?.text || "Shift + Enter"
+  const showBuilder = settings.showFeedbackBuilder?.text || "]"
+
+  if (mapText === openShortCut) {
+    openFirstAssignment(() => {
+      setTimeout(() => {
+        showFeedbackBuilder()
+      }, 1000)
+    })
   }
 
-  if (!event.shiftKey && event.code === "BracketRight") {
+  if (mapText === showBuilder) {
     showFeedbackBuilder()
   }
 
-  if (allowedPaths.includes(window.location.pathname)) {
-    if (event.shiftKey && event.code === "KeyO") {
-      openFirstAssignment()
+  if (mapText === insertShortCut) {
+    if (document.getElementById("insert-button")) {
+      insertFeedback()
     }
+  }
 
-    if (event.shiftKey && event.code === "BracketRight") {
-      if (document.getElementById("insert-button")) {
-        insertFeedback()
-      }
-    }
+  if (mapText === submitShortcut) {
+    const submitButton = Array.from(document.querySelectorAll("button")).find(
+      (btn) => btn.textContent === "Submit",
+    )
 
-    if (event.shiftKey && event.code === "BracketLeft") {
-      showGithubStats()
+    if (submitButton) {
+      submitButton.click()
+      setTimeout(() => {
+        openFirstAssignment(() => {
+          setTimeout(() => {
+            const okButton = Array.from(
+              document.querySelectorAll("button"),
+            ).find((btn) => btn.textContent === "OK")
+
+            if (okButton) okButton.click()
+            showFeedbackBuilder()
+          }, 1000)
+        })
+      }, 2000)
     }
   }
 }

@@ -1,0 +1,129 @@
+{
+  "type": "code",
+  "functions": [
+    {
+      "name": "calculateVAT",
+      "testCases": [
+        { "input": 1500, "output": 112.5, "type": "output" },
+        { "input": 200, "output": 15, "type": "output" },
+        { "input": 400, "output": 30, "type": "output" },
+        {
+          "input": "Validation",
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
+          "type": "validation"
+        }
+      ]
+    },
+    {
+      "name": "validContact",
+      "testCases": [
+        { "input": "01819234567", "output": true, "type": "output" },
+        { "input": "018192345679", "output": false, "type": "output" },
+        {
+          "input": [["01987654321"]],
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
+          "type": "validation"
+        }
+      ]
+    },
+    {
+      "name": "willSuccess",
+      "testCases": [
+        {
+          "input": [[60, 70, 80, 40, 30]],
+          "output": true,
+          "type": "output"
+        },
+        {
+          "input": [[48, 48, 50, 50, 100]],
+          "output": true,
+          "type": "output"
+        },
+        {
+          "input": [[]],
+          "output": false,
+          "type": "output"
+        },
+        {
+          "input": "Invalid",
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
+          "type": "validation"
+        }
+      ]
+    },
+    {
+      "name": "validProposal",
+      "testCases": [
+        {
+          "input": [
+            { "name": "milon", "gender": "male", "age": 20 },
+            { "name": "sumi", "gender": "female", "age": 25 }
+          ],
+          "output": true,
+          "type": "output"
+        },
+        {
+          "input": [
+            { "name": "shuvo", "gender": "male", "age": 20 },
+            { "name": "joy", "gender": "male", "age": 25 }
+          ],
+          "output": false,
+          "type": "output"
+        },
+        {
+          "input": [
+            { "name": "toya", "gender": "female", "age": 24 },
+            { "name": "bjoy", "gender": "male", "age": 32 }
+          ],
+          "output": false,
+          "type": "output"
+        },
+        {
+          "input": [{ "name": "mitu", "gender": "male", "age": 32 }, "Mizan"],
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
+          "type": "validation"
+        }
+      ]
+    },
+    {
+      "name": "calculateSleepTime",
+      "testCases": [
+        {
+          "input": [[1000, 499, 519, 300]],
+          "output": { "hour": 0, "minute": 38, "second": 38 },
+          "type": "output"
+        },
+        {
+          "input": [[100, 3800]],
+          "output": { "hour": 1, "minute": 5, "second": 0 },
+          "type": "output"
+        },
+        {
+          "input": [[100, 3800, "90"]],
+          "output": {
+            "matchType": "instance",
+            "value": "string",
+            "example": "Invalid"
+          },
+          "type": "validation"
+        }
+      ]
+    }
+  ]
+}
