@@ -11,7 +11,7 @@ function IndexPopup() {
   const [currentPage, setCurrentPage] = useState("Home")
 
   return (
-    <div className="w-[300px] h-[200px] bg-zinc-700 text-zinc-200">
+    <div className="w-[300px] h-[400px] bg-zinc-700 text-zinc-200">
       <div className="flex items-center gap-2 px-3 py-2 bg-zinc-800">
         {pages.map((page, index) => (
           <button

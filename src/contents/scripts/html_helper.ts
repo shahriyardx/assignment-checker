@@ -2,7 +2,6 @@ import { insertFeedback, insertFeedbackCode } from "./feedback"
 import type { CodeJson, Requirement, Section, SubRequirement } from "./types"
 import { BASE_URL, getJsonData } from "./utils"
 
-
 const getCustomFeedbackEl = (uniqueId: string) => {
   const customFeedback = document.createElement("div")
   customFeedback.id = `${uniqueId}_custom_feedback`
@@ -210,13 +209,15 @@ export const getCustomFeedback = (
 }
 
 const evalStudentSubmission = async (json: CodeJson) => {
-  const rawSubmission = document.getElementsByClassName("col-12 col-md-11") as HTMLCollection
+  const rawSubmission = document.getElementsByClassName(
+    "col-12 col-md-11",
+  ) as HTMLCollection
 
   let studentSubmisson = ""
   const codePriority = document.querySelector(".cp") as HTMLDivElement
 
   if (codePriority) {
-      studentSubmisson = codePriority.innerText
+    studentSubmisson = codePriority.innerText
   } else {
     // @ts-expect-error HTMLCollectionOf<HTMLDivElement>
     studentSubmisson = rawSubmission[rawSubmission.length - 1].innerText
@@ -234,7 +235,7 @@ const evalStudentSubmission = async (json: CodeJson) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      insertFeedbackCode(data as { feedback: string, totalMarks: number })
+      insertFeedbackCode(data as { feedback: string; totalMarks: number })
     })
 }
 
@@ -270,7 +271,7 @@ export const showFeedbackBuilder = () => {
   insertButton.id = "insert-button"
   insertButton.textContent = "Insert"
   insertButton.className = "w-full px-4 btn btn-primary"
-  insertButton.addEventListener("click", insertFeedback)
+  insertButton.addEventListener("click", () => insertFeedback())
 
   feedbackBuilder.appendChild(insertButton)
 

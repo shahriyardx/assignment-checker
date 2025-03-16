@@ -3,7 +3,6 @@ import { type RepoWithStats } from "./types"
 
 export const showGithubStats = async () => {
   const evalForm = document.querySelector(".assignment-evaluation-form")
-  console.log(evalForm)
   if (!evalForm) return
 
   const assignmentData = evalForm.querySelectorAll(

@@ -1,3 +1,4 @@
+import { getSettings, type LocalSettings } from "@/hooks"
 import { getCustomFeedback, getInputChecked } from "./html_helper"
 import type {
   BaseRequirement,
@@ -74,7 +75,7 @@ export const insertFeedbackCode = (data: {
   )
 }
 
-export const insertFeedback = () => {
+export const insertFeedback = async () => {
   const insertBtn = document.getElementById("insert-button")
   if (!insertBtn) return
 
@@ -150,6 +151,12 @@ export const insertFeedback = () => {
     feedback += "\n"
   }
 
+  const settings = await getSettings()
+
+  if (settings.copyMarks) {
+    window.navigator.clipboard.writeText(String(marks))
+  }
+
   insertFeedbackToDom(highestMark, submittedMark, marks, feedback)
 }
 
@@ -161,7 +168,6 @@ const insertFeedbackToDom = (
 ) => {
   let obtainedMark = marks
 
-  console.log(highestMark)
   if (highestMark !== submittedMark) {
     const numPercent = (marks / highestMark) * 100
     const obtainedMarkCeiled = Math.ceil(
@@ -179,18 +185,6 @@ const insertFeedbackToDom = (
   const suggestion = document.querySelector("#markSuggestions")
 
   markBox.focus()
-  markBox.value = String(obtainedMark)
-  markBox.addEventListener("keydown", (e) => {
-    if (e.shiftKey && e.code === "Enter") {
-      const submitButton = Array.from(document.querySelectorAll("button")).find(
-        (btn) => btn.textContent === "Submit",
-      )
-
-      if (submitButton) {
-        submitButton.click()
-      }
-    }
-  })
 
   if (suggestion) {
     suggestion.textContent = `${obtainedMark} ?`
