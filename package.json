@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@plasmohq/storage": "^1.9.0",
+    "@tailwindcss/typography": "^0.5.16",
     "lodash": "^4.17.21",
     "lucide-react": "^0.298.0",
     "moment": "^2.29.4",
@@ -35,12 +36,21 @@
     "typescript": "5.2.2"
   },
   "manifest": {
-    "host_permissions": ["https://web.programming-hero.com/*"],
-    "permissions": ["notifications", "storage"],
+    "host_permissions": [
+      "https://web.programming-hero.com/*"
+    ],
+    "permissions": [
+      "notifications",
+      "storage"
+    ],
     "web_accessible_resources": [
       {
-        "resources": ["assets/icon.png"],
-        "matches": ["<all_urls>"]
+        "resources": [
+          "assets/icon.png"
+        ],
+        "matches": [
+          "<all_urls>"
+        ]
       }
     ],
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyMBNCVs7mJD5zt7ZX0zANb8JtfdmzxWuHT/t9LEGLHzUnQ+U6mfbupdncmAlwTTomUjjHOJSrij1D4PX+1I4YtPNEZibbwbgWl26dR8yrhQ6I8hj5zSnczvDpMdH08IZ1QWgahHL3qb7KRosYL9k55iZ1o8DmLd2A4LHDl7F6HrpNVIA671XG3mC33gN+A9dZDmIiR1Yl1l9H5DyFzEU84TC3Ckv5s6yHX4P9c4lpxLai095PuMS0WJde3Cjd0OMVxgTPPreTFBMhOGVgBjAhNB9x0phWUpkiF0keR7yWTGT0TQ3H7VWQP1MVzuMzulCjRAa0vuUcEyetqvBaao7mQIDAQAB"
