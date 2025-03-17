@@ -4,13 +4,12 @@ import type { VersionInfo } from "./useVersion"
 import { RELEASE_URL } from "@/utils"
 
 const NewVersionAvailable = ({ versionInfo }: { versionInfo: VersionInfo }) => {
-  const { latestVersion, changelog } = versionInfo
+  const { latestVersion } = versionInfo
 
   return (
     <div className="flex flex-col">
       <h3 className="text-2xl font-bold">⬇ Update Available</h3>
       <p>{latestVersion}</p>
-      <div className="prose prose-invert">{changelog}</div>
       <div className="mt-3">
         <button
           type="button"

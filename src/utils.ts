@@ -1,32 +1,5 @@
-import { Storage } from "@plasmohq/storage"
-
-const storage = new Storage({ area: "local" })
-
 export const getCurrentVersion = () => {
   return `v${chrome.runtime.getManifest().version}`
-}
-
-export const shouldCheckForUpdate = async (force = false) => {
-  const currentDateTime = new Date()
-
-  if (force) {
-    storage.set("lastUpdateCheck", currentDateTime.toISOString())
-    return true
-  }
-
-  const lastUpdateCheck = await storage.get("lastUpdateCheck")
-
-  if (lastUpdateCheck) {
-    const lastDate = new Date(lastUpdateCheck).getTime()
-    const currentTime = currentDateTime.getTime()
-
-    const delta = 24 * 60 * 60 * 1000
-    const diff = currentTime - lastDate
-
-    if (diff < delta) return false
-  }
-
-  return true
 }
 
 export const getLatestVersionInfo = async () => {
