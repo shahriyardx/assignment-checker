@@ -2,4 +2,5 @@
 module.exports = {
   darkMode: "media",
   content: ["./src/**/*.{tsx,ts,html}"],
+  plugins: []
 }

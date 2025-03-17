@@ -151,16 +151,10 @@ export const insertFeedback = async () => {
     feedback += "\n"
   }
 
-  const settings = await getSettings()
-
-  if (settings.copyMarks) {
-    window.navigator.clipboard.writeText(String(marks))
-  }
-
   insertFeedbackToDom(highestMark, submittedMark, marks, feedback)
 }
 
-const insertFeedbackToDom = (
+const insertFeedbackToDom = async (
   highestMark: number,
   submittedMark: number,
   marks: number,
@@ -174,6 +168,12 @@ const insertFeedbackToDom = (
       Number((submittedMark / 100) * numPercent),
     )
     obtainedMark = Math.min(obtainedMarkCeiled, submittedMark)
+  }
+
+  const settings = await getSettings()
+
+  if (settings.copyMarks) {
+    window.navigator.clipboard.writeText(String(obtainedMark))
   }
 
   const textArea = document.querySelector(".ql-editor p")

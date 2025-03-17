@@ -1,7 +1,5 @@
 import { getCurrentVersion, getLatestVersionInfo } from "@/utils"
-import { Storage } from "@plasmohq/storage"
-import { useStorage } from "@plasmohq/storage/hook"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 export type VersionInfo = {
   latestVersion: string | null
@@ -11,48 +9,30 @@ export type VersionInfo = {
   lastUpdateCheck?: Date
 }
 
-const storage = new Storage({ area: "local" })
-
 const useVersion = () => {
-  const [lastUpdateCheck] = useStorage({
-    key: "lastUpdateCheck",
-    instance: storage,
-  })
-
   const [versionInfo, setVersionInfo] = useState<VersionInfo>({
     latestVersion: null,
     changelog: null,
     loading: true,
-    currentVersion: getCurrentVersion(),
+    currentVersion: null,
   })
 
-  const getUpdateInfo = async (force = false) => {
-    const { latestVersion, changelog } = await getLatestVersionInfo(force)
+  const getUpdateInfo = useCallback(async () => {
+    const { latestVersion, changelog } = await getLatestVersionInfo()
 
     setVersionInfo({
-      ...versionInfo,
+      currentVersion: getCurrentVersion(),
       latestVersion: latestVersion,
       changelog,
       loading: false,
-      lastUpdateCheck: lastUpdateCheck ? new Date(lastUpdateCheck) : new Date(),
     })
-  }
-
-  const refetch = () => {
-    setVersionInfo({ ...versionInfo, loading: true })
-    getUpdateInfo(true)
-  }
+  }, [])
 
   useEffect(() => {
-    storage.getItem("latestVersion").then((value) => {
-      if (!value) {
-        return getUpdateInfo(true)
-      }
-      getUpdateInfo()
-    })
+    getUpdateInfo()
   }, [getUpdateInfo])
 
-  return { ...versionInfo, refetch }
+  return { ...versionInfo }
 }
 
 export default useVersion

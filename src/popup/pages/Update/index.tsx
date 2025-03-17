@@ -9,6 +9,7 @@ const Update = () => {
 
   if (versionInfo.loading) return <p>Loading...</p>
 
+  console.log(versionInfo)
   return (
     <div className="h-full">
       {versionInfo.currentVersion === versionInfo.latestVersion ? (

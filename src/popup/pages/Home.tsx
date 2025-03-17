@@ -1,6 +1,7 @@
 import { useExtensionSettings } from "@/hooks"
 import React from "react"
 import { debounce } from "lodash"
+import { getKeymap } from "@/utils"
 
 const Home = () => {
   const { settings, updateSettings } = useExtensionSettings()
@@ -9,24 +10,8 @@ const Home = () => {
     event.preventDefault()
 
     const handler = debounce(() => {
-      const keyMap = {
-        shiftKey: false,
-        altKey: false,
-        key: null,
-        text: "",
-      }
-
-      keyMap.shiftKey = event.shiftKey
-      keyMap.altKey = event.altKey
-      keyMap.key = event.key
-
-      keyMap.text = `${
-        event.shiftKey ? "Shift + " : event.altKey ? "Alt + " : ""
-      } ${event.key}`
-
-      const obj = {}
-      obj[key] = keyMap
-      updateSettings(obj)
+      const keyMap = getKeymap(event)
+      updateSettings({ [key]: keyMap })
     }, 500)
 
     handler()
