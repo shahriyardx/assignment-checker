@@ -3,13 +3,8 @@ import { insertFeedback } from "./feedback"
 import { showFeedbackBuilder } from "./html_helper"
 import { showJsonLoader } from "./loader"
 import { openFirstAssignment } from "./utils"
+import { getKeymap } from "@/utils"
 
-export const allowedPaths = [
-  "/instructor-dashboard/assignments",
-  "/instructor-dashboard/my-assignment",
-  "/instructor-dashboard/mock-interview-my-student",
-  "/instructor-dashboard/mock-interview-completed",
-]
 
 const handleKeyDown = async (event: KeyboardEvent) => {
   if (event.shiftKey && event.code === "Backslash") {
@@ -18,9 +13,8 @@ const handleKeyDown = async (event: KeyboardEvent) => {
 
   const settings = await getSettings()
 
-  const mapText = `${
-    event.shiftKey ? "Shift + " : event.altKey ? "Alt + " : ""
-  } ${event.key}`
+  const keymap = getKeymap(event)
+  const mapText = keymap.text
 
   const openShortCut = settings.openAssignmentShortcut?.text || "Shift + O"
   const insertShortCut = settings.insertFeedbackShortcut?.text || "Shift + }"

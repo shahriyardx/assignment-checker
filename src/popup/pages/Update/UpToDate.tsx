@@ -5,9 +5,9 @@ import type { VersionInfo } from "./useVersion"
 const UpToDate = ({
   versionInfo,
 }: {
-  versionInfo: VersionInfo & { refetch: () => void }
+  versionInfo: VersionInfo
 }) => {
-  const { latestVersion, lastUpdateCheck, refetch } = versionInfo
+  const { latestVersion, lastUpdateCheck } = versionInfo
 
   return (
     <div className="flex flex-col h-full">
@@ -22,16 +22,6 @@ const UpToDate = ({
         <span className="text-white">Last Update Check:</span>{" "}
         {moment(lastUpdateCheck).format("MMM Do, YYYY, h:mm A")}
       </p>
-
-      <div className="mt-auto">
-        <button
-          type="button"
-          onClick={() => refetch()}
-          className="px-3 py-2 text-xs bg-indigo-500 hover:bg-indigo-600 text-white rounded-md"
-        >
-          Check Update
-        </button>
-      </div>
     </div>
   )
 }
