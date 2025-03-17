@@ -1,81 +1,47 @@
-import {
-  RELEASE_URL,
-  getCurrentVersion,
-  getLatestVersionInfo,
-  shouldCheckForUpdate,
-} from "@/utils"
-import { Storage } from "@plasmohq/storage"
+// chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+//   if (message.action === "createTab") {
+//     chrome.tabs.create({ url: message.url })
+//     sendResponse({ received: true })
+//   }
+// })
 
-const storage = new Storage({ area: "local" })
+// const sendUpdateNotification = ({
+//   latestVersion,
+//   changelog,
+// }: {
+//   currentVersion: string
+//   latestVersion: string
+//   changelog: string
+// }) => {
+//   const manifest = chrome.runtime.getManifest()
+//   const btnId = `update_${latestVersion}`
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  if (changeInfo.url) {
-    chrome.tabs.sendMessage(tabId, {
-      action: "urlChange",
-      url: changeInfo.url,
-    })
-  }
-})
+//   chrome.action.setBadgeText({ text: "1" })
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message.action === "createTab") {
-    chrome.tabs.create({ url: message.url })
-    sendResponse({ received: true })
-  }
-})
+//   chrome.notifications.create(btnId, {
+//     iconUrl: "~assets/icon.png",
+//     title: `[Update] ${manifest.name}`,
+//     type: "basic",
+//     message: `A new update is available for ${manifest.name} (${latestVersion})\n\nWhats New:\n${changelog}`,
+//     requireInteraction: true,
+//     buttons: [{ title: "Download" }],
+//   })
 
-const checkUpdate = async () => {
-  const currentDateTime = new Date()
+//   chrome.notifications.onButtonClicked.addListener(
+//     (notificationId, buttonIndex) => {
+//       if (notificationId === btnId && buttonIndex === 0) {
+//         chrome.tabs.create({
+//           url: RELEASE_URL,
+//         })
+//       }
+//     },
+//   )
+// }
 
-  if (!(await shouldCheckForUpdate())) return
+// chrome.runtime.onStartup.addListener(() => {
+//   checkUpdate()
+// })
 
-  await storage.set("lastUpdateCheck", currentDateTime.toISOString())
-
-  const { latestVersion, changelog } = await getLatestVersionInfo()
-  const currentVersion = getCurrentVersion()
-
-  if (currentVersion !== latestVersion) {
-    sendUpdateNotification({ currentVersion, latestVersion, changelog })
-  }
-}
-
-const sendUpdateNotification = ({
-  latestVersion,
-  changelog,
-}: {
-  currentVersion: string
-  latestVersion: string
-  changelog: string
-}) => {
-  const manifest = chrome.runtime.getManifest()
-  const btnId = `update_${latestVersion}`
-
-  chrome.action.setBadgeText({ text: "1" })
-
-  chrome.notifications.create(btnId, {
-    iconUrl: "~assets/icon.png",
-    title: `[Update] ${manifest.name}`,
-    type: "basic",
-    message: `A new update is available for ${manifest.name} (${latestVersion})\n\nWhats New:\n${changelog}`,
-    requireInteraction: true,
-    buttons: [{ title: "Download" }],
-  })
-
-  chrome.notifications.onButtonClicked.addListener(
-    (notificationId, buttonIndex) => {
-      if (notificationId === btnId && buttonIndex === 0) {
-        chrome.tabs.create({
-          url: RELEASE_URL,
-        })
-      }
-    },
-  )
-}
-
-chrome.runtime.onStartup.addListener(() => {
-  checkUpdate()
-})
-
-chrome.runtime.onInstalled.addListener(() => {
-  checkUpdate()
-})
+// chrome.runtime.onInstalled.addListener(() => {
+//   checkUpdate()
+// })
