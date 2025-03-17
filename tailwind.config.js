@@ -2,5 +2,5 @@
 module.exports = {
   darkMode: "media",
   content: ["./src/**/*.{tsx,ts,html}"],
-  plugins: [require("@tailwindcss/typography")]
+  plugins: []
 }
