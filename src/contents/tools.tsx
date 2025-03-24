@@ -7,7 +7,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { insertFeedback } from "./scripts/feedback"
 import { showFeedbackBuilder } from "./scripts/html_helper"
 import { openFirstAssignment, submitMarks } from "./scripts/utils"
-import { useCurrentPath, useExtensionSettings } from "@/hooks"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -17,7 +16,6 @@ export const getStyle = () => {
 
 const Tools = () => {
   const [open, setOpen] = useState(false)
-  const currentPath = useCurrentPath()
 
   return (
     <div className={"fixed right-0 -translate-y-1/2 top-1/2"}>

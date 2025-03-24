@@ -1,6 +1,5 @@
 import type {
   AssignmentData,
-  CodeJson,
   Json,
   JSONDATA,
   OldJson,
