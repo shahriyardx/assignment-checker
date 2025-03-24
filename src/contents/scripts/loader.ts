@@ -1,4 +1,4 @@
-import { type JsonData } from "./types"
+import type { JsonData } from "./types"
 import { kebabCase } from "lodash"
 import { BASE_URL } from "./utils"
 
@@ -32,11 +32,11 @@ export const showJsonLoader = async () => {
 
   const html = `
         <div>
-          <h3 style="margin-bottom: 10px; font-weight: bold; text-decoration: underline;">Loaded JSON</h3> 
+          <h3 style="margin-bottom: 10px; font-weight: bold; text-decoration: underline;">Loaded</h3> 
           <div id="json-list" style="display: flex; flex-direction: column; margin-bottom: 10px;"></div>
           <input type="file" id="import-json-btn">
 
-          <h3 style="margin-bottom: 10px; margin-top: 20px; font-weight: bold; text-decoration: underline;">Cloud JSON</h3> 
+          <h3 style="margin-bottom: 10px; margin-top: 20px; font-weight: bold; text-decoration: underline;">Cloud</h3> 
           <div>
             <div style="display: flex; align-items: center; gap: 10px;">
               <select class="form-control" id="json-batch-selector">
@@ -57,9 +57,7 @@ export const showJsonLoader = async () => {
   const container = assignmentModal || loaderContainer
   container.insertAdjacentElement("afterbegin", div)
 
-  const batchesResponse = await fetch(
-    `${BASE_URL}/api/extension/batches`,
-  )
+  const batchesResponse = await fetch(`${BASE_URL}/api/extension/batches`)
   const batches = (await batchesResponse.json()) as {
     id: string
     name: string

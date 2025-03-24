@@ -183,7 +183,7 @@ const createSection = (section: Section, sectionIndex: number) => {
     const req = section.requirements[reqIndex]
     const reqContainer = createRequirement(
       req,
-      parseInt(reqIndex),
+      Number.parseInt(reqIndex),
       sectionIndex,
     )
     requirementsContainer.appendChild(reqContainer)
@@ -263,7 +263,7 @@ export const showFeedbackBuilder = () => {
 
   for (const sectionIndex in sections) {
     const section = sections[sectionIndex]
-    const sectionHtml = createSection(section, parseInt(sectionIndex))
+    const sectionHtml = createSection(section, Number.parseInt(sectionIndex))
     feedbackBuilder.appendChild(sectionHtml)
   }
 
