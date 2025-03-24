@@ -8,15 +8,12 @@ export const useCurrentPath = () => {
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      if (window.location.pathname !== currentPath) {
-        setCurrentPath(window.location.pathname)
-      }
+      setCurrentPath(window.location.pathname)
     })
 
     observer.observe(document.body, { childList: true, subtree: true })
-
     return () => observer.disconnect()
-  }, [currentPath])
+  }, [])
 
   return currentPath
 }

@@ -1,4 +1,4 @@
-import { getSettings, type LocalSettings } from "@/hooks"
+import { getSettings } from "@/hooks"
 import { getCustomFeedback, getInputChecked } from "./html_helper"
 import type {
   BaseRequirement,
@@ -48,7 +48,7 @@ const getHighestMark = (submittedMark: number, jsonData: JSONDATA) => {
     const badge = document.querySelector(".badge")?.textContent
 
     if (badge) {
-      highestMark = parseInt(
+      highestMark = Number.parseInt(
         document.querySelector(".badge")?.textContent as string,
       )
     } else {
@@ -96,7 +96,7 @@ export const insertFeedback = async () => {
     for (const reqIndex in section.requirements) {
       globalIndex += 1
       const req = section.requirements[reqIndex] as Requirement
-      const reqId = `${parseInt(sectionIndex)}_${parseInt(reqIndex)}`
+      const reqId = `${Number.parseInt(sectionIndex)}_${Number.parseInt(reqIndex)}`
       const reqCorrect = getInputChecked(reqId)
 
       if (!reqCorrect) {
@@ -117,9 +117,9 @@ export const insertFeedback = async () => {
         const subRequirements = req.subRequirements as BaseRequirement[]
         for (const subReqIndex in subRequirements) {
           const subReq = subRequirements[subReqIndex]
-          const subReqId = `${parseInt(sectionIndex)}_${parseInt(
+          const subReqId = `${Number.parseInt(sectionIndex)}_${Number.parseInt(
             reqIndex,
-          )}_${parseInt(subReqIndex)}`
+          )}_${Number.parseInt(subReqIndex)}`
 
           const subReqCorrect = getInputChecked(subReqId)
 
