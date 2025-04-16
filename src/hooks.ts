@@ -24,6 +24,7 @@ export type LocalSettings = {
   submitMarksShortcut?: Record<any, any>
   insertFeedbackShortcut?: Record<any, any>
   showFeedbackBuilder?: Record<any, any>
+  openLinks?: boolean
 }
 
 export const getSettings = async () => {

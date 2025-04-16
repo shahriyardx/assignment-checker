@@ -33,6 +33,18 @@ const Home = () => {
           <label htmlFor="copy_marks">Copy marks to clipboard</label>
         </div>
 
+        <div className="flex items-center gap-2">
+          <input
+            checked={settings.openLinks}
+            onChange={(event) =>
+              updateSettings({ openLinks: event.target.checked })
+            }
+            id="open_links"
+            type="checkbox"
+          />
+          <label htmlFor="open_links">Automatically Open Links</label>
+        </div>
+
         <div className="flex flex-col gap-2">
           <label htmlFor="copy_marks">Assignment Open Shortcut</label>
           <input

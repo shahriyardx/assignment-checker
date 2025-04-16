@@ -93,6 +93,24 @@ export const openFirstAssignment = (callback?: CallableFunction) => {
   }
 }
 
+export const getSubmissionText = () => {
+  const rawSubmission = document.getElementsByClassName(
+    "col-12 col-md-11",
+  ) as HTMLCollection
+
+  // @ts-expect-error
+  const studentSubmisson = rawSubmission[rawSubmission.length - 1].innerText
+  return studentSubmisson
+}
+
+export const getSubmittionLinks = (text: string) => {
+  const linkRegex =
+    /(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9]\.)+[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9](?:\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?/gi
+
+    const links = text.match(linkRegex)
+    return links
+}
+
 export const submitMarks = () => {
   const submitButton = Array.from(document.querySelectorAll("button")).find(
     (btn) =>

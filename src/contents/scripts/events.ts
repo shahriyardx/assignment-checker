@@ -2,9 +2,12 @@ import { getSettings } from "@/hooks"
 import { insertFeedback } from "./feedback"
 import { showFeedbackBuilder } from "./html_helper"
 import { showJsonLoader } from "./loader"
-import { openFirstAssignment } from "./utils"
+import {
+  getSubmissionText,
+  getSubmittionLinks,
+  openFirstAssignment,
+} from "./utils"
 import { getKeymap } from "@/utils"
-
 
 const handleKeyDown = async (event: KeyboardEvent) => {
   if (event.shiftKey && event.code === "Backslash") {
@@ -24,6 +27,15 @@ const handleKeyDown = async (event: KeyboardEvent) => {
   if (mapText === openShortCut) {
     openFirstAssignment(() => {
       setTimeout(() => {
+        if (settings.openLinks) {
+          const submission = getSubmissionText()
+          const links = getSubmittionLinks(submission)
+
+          for (const link of links) {
+            window.open(link, "_blank", "noopener,noreferrer")
+          }
+        }
+
         showFeedbackBuilder()
       }, 1000)
     })
