@@ -6,6 +6,7 @@ import {
   getSubmissionText,
   getSubmittionLinks,
   openFirstAssignment,
+  openLinks,
 } from "./utils"
 import { getKeymap } from "@/utils"
 
@@ -28,12 +29,7 @@ const handleKeyDown = async (event: KeyboardEvent) => {
     openFirstAssignment(() => {
       setTimeout(() => {
         if (settings.openLinks) {
-          const submission = getSubmissionText()
-          const links = getSubmittionLinks(submission)
-
-          for (const link of links) {
-            window.open(link, "_blank", "noopener,noreferrer")
-          }
+          openLinks()
         }
 
         showFeedbackBuilder()
@@ -61,6 +57,10 @@ const handleKeyDown = async (event: KeyboardEvent) => {
       setTimeout(() => {
         openFirstAssignment(() => {
           setTimeout(() => {
+            if (settings.openLinks) {
+              openLinks()
+            }
+
             const okButton = Array.from(
               document.querySelectorAll("button"),
             ).find((btn) => btn.textContent === "OK")

@@ -107,8 +107,18 @@ export const getSubmittionLinks = (text: string) => {
   const linkRegex =
     /(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9]\.)+[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9](?:\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?/gi
 
-    const links = text.match(linkRegex)
-    return links
+  const links = text
+    .match(linkRegex)
+    .map((link) => (link.startsWith("http") ? link : `https://${link}`))
+
+  return links
+}
+
+export const openLinks = () => {
+  const links = getSubmittionLinks(getSubmissionText())
+  for (const link of links) {
+    window.open(link, "_blank", "noopener,noreferrer")
+  }
 }
 
 export const submitMarks = () => {
