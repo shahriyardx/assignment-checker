@@ -116,9 +116,10 @@ export const showJsonLoader = async () => {
 
     const target = e.target as HTMLSelectElement
     const assignmentId = target.value
+    const batchId = batchSelect.value
 
     const assignmentJsonResponse = await fetch(
-      `${BASE_URL}/api/extension/assignments/${assignmentId}`,
+      `${BASE_URL}/api/extension/assignments/${batchId}/${assignmentId}`,
     )
     const jsons = (await assignmentJsonResponse.json()) as {
       data: string
