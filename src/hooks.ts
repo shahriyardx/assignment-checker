@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react"
 import { Storage } from "@plasmohq/storage"
+import { useCallback, useEffect, useState } from "react"
+import type { Keymap } from "@/utils"
 
 const storage = new Storage({ area: "local" })
 
@@ -20,51 +21,48 @@ export const useCurrentPath = () => {
 
 export type LocalSettings = {
   copyMarks?: boolean
-  openAssignmentShortcut?: Record<any, any>
-  submitMarksShortcut?: Record<any, any>
-  insertFeedbackShortcut?: Record<any, any>
-  showFeedbackBuilder?: Record<any, any>
   openLinks?: boolean
+  openAssignmentShortcut?: Keymap
+  submitMarksShortcut?: Keymap
+  insertFeedbackShortcut?: Keymap
+  showFeedbackBuilder?: Keymap
+}
+
+const parseSettings = (raw: string | null | undefined): LocalSettings => {
+  if (!raw) return {}
+
+  try {
+    return JSON.parse(raw) as LocalSettings
+  } catch {
+    return {}
+  }
 }
 
 export const getSettings = async () => {
   const settings = await storage.getItem("settings")
-  if (settings) {
-    return JSON.parse(settings) as LocalSettings
-  }
-
-  return {} as LocalSettings
+  return parseSettings(settings)
 }
 
 export const useExtensionSettings = () => {
-  const [settings, setSettings] = useState<LocalSettings>({
-    copyMarks: false,
-  })
+  const [settings, setSettings] = useState<LocalSettings>({ copyMarks: false })
+  const [loading, setLoading] = useState(true)
 
   const loadSettings = useCallback(async () => {
     const localSettings = await storage.getItem("settings")
-    if (!localSettings) {
-      setSettings(() => ({
-        copyMarks: false,
-      }))
-    } else {
-      setSettings(() => JSON.parse(localSettings) as LocalSettings)
-    }
+    setSettings(parseSettings(localSettings))
+    setLoading(false)
   }, [])
 
   const updateSettings = async (updatedSettings: LocalSettings) => {
-    const newSettings: LocalSettings = {
-      ...settings,
-      ...updatedSettings,
-    }
+    const newSettings: LocalSettings = { ...settings, ...updatedSettings }
 
     await storage.setItem("settings", JSON.stringify(newSettings))
-    setSettings(() => newSettings)
+    setSettings(newSettings)
   }
 
   useEffect(() => {
     loadSettings()
   }, [loadSettings])
 
-  return { settings, updateSettings }
+  return { settings, updateSettings, loading }
 }

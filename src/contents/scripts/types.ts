@@ -3,19 +3,6 @@ export type JsonData = {
   data: object
 }
 
-export type Repo = {
-  url: string
-  owner: string
-  repoName: string
-}
-
-export type RepoWithStats = Repo & {
-  stats: {
-    lastCommitDate: string
-    commits: number
-  }
-}
-
 export interface BaseRequirement {
   description: string
   number: string
@@ -47,29 +34,11 @@ export type Json = {
   highestMark?: number
 }
 
-export type CodeJson = {
-  type: string
-  functions: {
-    name: string
-    testCases: { input: any[]; output: any }[]
-  }[]
-  highestMark: number
+export type JSONDATA = {
+  type?: "new"
+  sections: Section[]
+  highestMark?: number
 }
-
-export type JSONDATA =
-  | {
-      type?: "new"
-      sections: Section[]
-      highestMark?: number
-    }
-  | {
-      type: "code"
-      functions: {
-        name: string
-        testCases: { input: any[]; output: any }[]
-      }[]
-      highestMark?: number
-    }
 
 export type AssignmentData = {
   fileanme: string

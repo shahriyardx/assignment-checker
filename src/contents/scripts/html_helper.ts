@@ -1,19 +1,17 @@
-import { insertFeedback, insertFeedbackCode } from "./feedback"
-import type { CodeJson, Requirement, Section, SubRequirement } from "./types"
-import { BASE_URL, getJsonData } from "./utils"
+import { insertFeedback } from "./feedback"
+import { showNotice } from "./notice"
+import { injectPanelStyles } from "./panel-styles"
+import type { Requirement, Section, SubRequirement } from "./types"
+import { getJsonData } from "./utils"
 
 const getCustomFeedbackEl = (uniqueId: string) => {
   const customFeedback = document.createElement("div")
   customFeedback.id = `${uniqueId}_custom_feedback`
-  customFeedback.style.display = "none"
-  customFeedback.style.gridTemplateColumns = "1fr 1fr"
-  customFeedback.style.gap = "5px"
-  customFeedback.style.paddingInline = "12px"
-  customFeedback.style.paddingBottom = "10px"
+  customFeedback.className = "ac-cf"
 
   const cfHtml = `
-      <input type="text" class="cf" placeholder="Custom Feedback">
-      <input type="number" class="cn" placeholder="Partial Marks">
+      <input type="text" class="cf ac-input" placeholder="Custom feedback">
+      <input type="number" class="cn ac-input" placeholder="Partial">
     `
 
   customFeedback.innerHTML = cfHtml
@@ -26,69 +24,88 @@ export const getInputChecked = (id: string) => {
   return input?.checked
 }
 
-const showCustomFeedbackEl = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  const display = target.checked ? "none" : "grid"
-
-  const cf = document.getElementById(`${target.id}_custom_feedback`)
+const setCustomFeedbackVisible = (uniqueId: string, visible: boolean) => {
+  const cf = document.getElementById(`${uniqueId}_custom_feedback`)
   if (cf) {
-    cf.style.display = display
+    cf.style.display = visible ? "grid" : "none"
   }
 }
 
-const createReqContainer = () => {
-  const el = document.createElement("div")
-  el.classList.add("requirement-handler")
-  el.style.display = "grid"
-  el.style.gap = "10px"
-  el.style.gridTemplateColumns = "auto 20px"
+const getSubRequirementInputs = (reqId: string) =>
+  Array.from(
+    document.querySelectorAll<HTMLInputElement>(
+      `input[data-reqindex^="${reqId}_"]`,
+    ),
+  )
 
-  return el
+const syncSubRequirements = (reqId: string, reqChecked: boolean) => {
+  for (const sub of getSubRequirementInputs(reqId)) {
+    if (!reqChecked) {
+      // the whole requirement is wrong, so its sub-requirements are too. their
+      // custom feedback stays hidden because insertFeedback() ignores them.
+      sub.checked = false
+      setCustomFeedbackVisible(sub.id, false)
+    } else if (!sub.checked) {
+      // back in play, so any still-unchecked sub needs its input on screen
+      setCustomFeedbackVisible(sub.id, true)
+    }
+  }
+}
+
+const showCustomFeedbackEl = (event: Event) => {
+  const target = event.target as HTMLInputElement
+
+  setCustomFeedbackVisible(target.id, !target.checked)
+  syncSubRequirements(target.id, target.checked)
 }
 
 const createCheckInput = (uniqueId: string) => {
-  const container = document.createElement("div")
   const input = document.createElement("input")
   input.type = "checkbox"
+  input.className = "ac-check"
   input.setAttribute("data-reqindex", uniqueId)
   input.setAttribute("id", uniqueId)
   input.setAttribute("checked", "yes")
   input.addEventListener("change", (e) => showCustomFeedbackEl(e))
 
-  container.appendChild(input)
-
-  return container
+  return input
 }
 
-const createLabel = (textContent: string, htmlFor: string) => {
+const createLabel = (
+  description: string,
+  marks: string,
+  htmlFor: string,
+  index?: number,
+) => {
   const label = document.createElement("label")
-  label.textContent = textContent
+  label.className = "ac-req__label"
   label.htmlFor = htmlFor
+
+  if (index !== undefined) {
+    const num = document.createElement("span")
+    num.className = "ac-num"
+    num.textContent = `${index}.`
+    label.appendChild(num)
+  }
+
+  label.appendChild(document.createTextNode(description))
+
+  const marksChip = document.createElement("span")
+  marksChip.className = "ac-marks"
+  marksChip.textContent = marks
+  label.appendChild(marksChip)
 
   return label
 }
 
-const wrap = (
-  abbr: string,
-  elements: Array<Element>,
-  properties: Record<string, any> = {},
-) => {
-  const el = document.createElement(abbr)
-  for (const [key, val] of Object.entries(properties)) {
-    el.setAttribute(key, val)
-  }
+const createReqLine = (label: HTMLElement, check: HTMLElement) => {
+  const line = document.createElement("div")
+  line.className = "requirement-handler ac-req__line"
 
-  for (const item of elements) {
-    el.appendChild(item)
-  }
+  line.appendChild(label)
+  line.appendChild(check)
 
-  return el
-}
-
-const appendChild = (container: Element, childs: Array<Element>) => {
-  for (const child of childs) {
-    container.appendChild(child)
-  }
+  return line
 }
 
 const createSubrequirement = (
@@ -97,28 +114,23 @@ const createSubrequirement = (
   sectionIndex: number,
 ) => {
   const reqContainer = document.createElement("div")
-  reqContainer.classList.add("sub-requirements-container")
-  reqContainer.style.paddingLeft = "3px"
-  reqContainer.style.paddingRight = "15px"
+  reqContainer.className = "sub-requirements-container ac-subs"
 
   for (const subReqIndex in requirements) {
     const subReq = requirements[subReqIndex]
-    const subRequirement = createReqContainer()
 
     const uniqueId = `${sectionIndex}_${reqIndex}_${subReqIndex}`
     const cf = getCustomFeedbackEl(uniqueId)
 
-    const reqTitle = createLabel(
-      `└─ ${subReq.description} (${subReq.number})`,
-      uniqueId,
-    )
+    const reqTitle = createLabel(subReq.description, subReq.number, uniqueId)
+    const line = createReqLine(reqTitle, createCheckInput(uniqueId))
 
-    appendChild(subRequirement, [reqTitle, createCheckInput(uniqueId)])
-    reqContainer.appendChild(
-      wrap("div", [subRequirement, cf], {
-        class: "single-requirement",
-      }),
-    )
+    const single = document.createElement("div")
+    single.className = "single-requirement ac-req"
+    single.appendChild(line)
+    single.appendChild(cf)
+
+    reqContainer.appendChild(single)
   }
 
   return reqContainer
@@ -132,24 +144,24 @@ const createRequirement = (
   const reqContainer = document.createElement("div")
   reqContainer.classList.add("requirement")
 
-  const mainRequirement = createReqContainer()
-
   const uniqueId = `${sectionIndex}_${reqIndex}`
   const cf = getCustomFeedbackEl(uniqueId)
 
   const reqTitle = createLabel(
-    `${reqIndex + 1}. ${requirement.data.description} (${
-      requirement.data.number
-    })`,
+    requirement.data.description,
+    requirement.data.number,
     uniqueId,
+    reqIndex + 1,
   )
 
-  appendChild(mainRequirement, [reqTitle, createCheckInput(uniqueId)])
-  reqContainer.appendChild(
-    wrap("div", [mainRequirement, cf], {
-      class: "single-requirement",
-    }),
-  )
+  const line = createReqLine(reqTitle, createCheckInput(uniqueId))
+
+  const single = document.createElement("div")
+  single.className = "single-requirement ac-req"
+  single.appendChild(line)
+  single.appendChild(cf)
+
+  reqContainer.appendChild(single)
 
   const subRequirements = createSubrequirement(
     requirement.subRequirements,
@@ -166,24 +178,23 @@ const createRequirement = (
 
 const createSection = (section: Section, sectionIndex: number) => {
   const sectionContainer = document.createElement("div")
-  sectionContainer.style.marginBottom = "20px"
+  sectionContainer.className = "ac-section"
   sectionContainer.id = section.name
-  const sectionTitle = document.createElement("h4")
+
+  const sectionTitle = document.createElement("div")
+  sectionTitle.className = "ac-label"
   sectionTitle.textContent = section.name
-  sectionTitle.style.padding = "5px"
-  sectionTitle.style.borderRadius = "10px"
-  sectionTitle.style.background = "#b9b9b9"
-  sectionTitle.style.color = "white"
 
   sectionContainer.appendChild(sectionTitle)
+
   const requirementsContainer = document.createElement("div")
-  requirementsContainer.classList.add("requirements-container")
+  requirementsContainer.className = "requirements-container ac-reqs"
 
   for (const reqIndex in section.requirements) {
     const req = section.requirements[reqIndex]
     const reqContainer = createRequirement(
       req,
-      Number.parseInt(reqIndex),
+      Number.parseInt(reqIndex, 10),
       sectionIndex,
     )
     requirementsContainer.appendChild(reqContainer)
@@ -208,74 +219,46 @@ export const getCustomFeedback = (
   ]
 }
 
-const evalStudentSubmission = async (json: CodeJson) => {
-  const rawSubmission = document.getElementsByClassName(
-    "col-12 col-md-11",
-  ) as HTMLCollection
-
-  let studentSubmisson = ""
-  const codePriority = document.querySelector(".cp") as HTMLDivElement
-
-  if (codePriority) {
-    studentSubmisson = codePriority.innerText
-  } else {
-    // @ts-expect-error HTMLCollectionOf<HTMLDivElement>
-    studentSubmisson = rawSubmission[rawSubmission.length - 1].innerText
-  }
-
-  fetch(`${BASE_URL}/api/extension/eval`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      code: studentSubmisson,
-      jsonData: json,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      insertFeedbackCode(data as { feedback: string; totalMarks: number })
-    })
-}
-
 export const showFeedbackBuilder = () => {
   const jsonData = getJsonData()
-
-  if (jsonData.type === "code") {
-    evalStudentSubmission(jsonData as CodeJson)
-    return
-  }
+  if (!jsonData?.sections?.length) return
 
   const sections = jsonData.sections
 
   const feedbackBox = document.querySelector(".feedback-box")
+  if (!feedbackBox) {
+    showNotice("Open an assignment first, then show the builder.", "error")
+    return
+  }
 
   const existingBuilder = document.querySelector("#feedbackbuilder")
   if (existingBuilder) return
 
+  injectPanelStyles()
+
   const feedbackBuilder = document.createElement("div")
   feedbackBuilder.id = "feedbackbuilder"
-  feedbackBuilder.style.margin = "20px"
-  feedbackBuilder.style.border = "2px solid gray"
-  feedbackBuilder.style.padding = "20px"
-  feedbackBuilder.style.borderRadius = "20px"
+  feedbackBuilder.className = "ac-panel ac-panel--builder"
 
   for (const sectionIndex in sections) {
     const section = sections[sectionIndex]
-    const sectionHtml = createSection(section, Number.parseInt(sectionIndex))
+    const sectionHtml = createSection(
+      section,
+      Number.parseInt(sectionIndex, 10),
+    )
     feedbackBuilder.appendChild(sectionHtml)
   }
 
   const insertButton = document.createElement("button")
   insertButton.id = "insert-button"
-  insertButton.textContent = "Insert"
-  insertButton.className = "w-full px-4 btn btn-primary"
+  insertButton.type = "button"
+  insertButton.textContent = "Insert feedback"
+  insertButton.className = "ac-insert"
   insertButton.addEventListener("click", () => insertFeedback())
 
   feedbackBuilder.appendChild(insertButton)
 
-  feedbackBox?.insertBefore(
+  feedbackBox.insertBefore(
     feedbackBuilder,
     feedbackBox.querySelector("form") as HTMLElement,
   )

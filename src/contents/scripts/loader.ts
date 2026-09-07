@@ -1,13 +1,18 @@
-import type { JsonData } from "./types"
-import { kebabCase } from "lodash"
-import { BASE_URL } from "./utils"
+import {
+  activateJson,
+  addJsonFiles,
+  getActiveFilename,
+  getJsons,
+  removeJson,
+  subscribeToJsons,
+} from "./json-store"
+import { showNotice } from "./notice"
+import { injectPanelStyles } from "./panel-styles"
 
-const getButton = (content: string) => {
+const getButton = (content: string, className: string) => {
   const btn = document.createElement("button")
-  btn.style.border = "none"
-  btn.style.paddingInline = "10px"
-  btn.style.fontSize = "15px"
-  btn.style.borderRadius = "10px"
+  btn.type = "button"
+  btn.className = className
   btn.textContent = content
 
   return btn
@@ -23,213 +28,75 @@ export const showJsonLoader = async () => {
   const importer = document.querySelector("#json-importer")
   if (importer) return importer.remove()
 
+  injectPanelStyles()
+
   const div = document.createElement("div")
   div.id = "json-importer"
-  div.style.border = "2px solid black"
-  div.style.borderRadius = "10px"
-  div.style.padding = "10px"
-  div.style.marginBottom = "10px"
+  div.className = "ac-panel"
+  div.style.padding = "14px"
+  div.style.marginBottom = "12px"
 
-  const html = `
-        <div>
-          <h3 style="margin-bottom: 10px; font-weight: bold; text-decoration: underline;">Loaded</h3> 
-          <div id="json-list" style="display: flex; flex-direction: column; margin-bottom: 10px;"></div>
-          <input type="file" id="import-json-btn">
-
-          <h3 style="margin-bottom: 10px; margin-top: 20px; font-weight: bold; text-decoration: underline;">Cloud</h3> 
-          <div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <select class="form-control" id="json-batch-selector">
-                <option value="" selected disabled>Select Batch</option>
-              </select>
-              <select class="form-control d-none" id="json-assignment-selector">
-                <option value="" selected>Select Assignment</option>
-              </select>
-            </div>
-
-            <div id="cloud-jsons" style="margin-top: 5px;"></div>
-          <div>
-        <div>
+  div.innerHTML = `
+        <div class="ac-label">Loaded <span class="ac-count" id="json-count">0</span></div>
+        <div id="json-list" class="ac-list"></div>
+        <input type="file" id="import-json-btn" class="ac-file" accept=".json,application/json" multiple>
+        <p class="ac-hint">Pick one or more JSON files. The last one becomes active.</p>
     `
-
-  div.innerHTML = html
 
   const container = assignmentModal || loaderContainer
   container.insertAdjacentElement("afterbegin", div)
-
-  const batchesResponse = await fetch(`${BASE_URL}/api/extension/batches`)
-  const batches = (await batchesResponse.json()) as {
-    id: string
-    name: string
-  }[]
-
-  const batchSelect = document.getElementById(
-    "json-batch-selector",
-  ) as HTMLSelectElement
-  const assignmentSelect = document.getElementById(
-    "json-assignment-selector",
-  ) as HTMLSelectElement
-
-  for (const batch of batches) {
-    const batchOpt = document.createElement("option")
-    batchOpt.value = batch.id
-    batchOpt.textContent = batch.name
-
-    batchSelect?.appendChild(batchOpt)
-  }
-
-  batchSelect.addEventListener("change", async (e: Event) => {
-    const target = e.target as HTMLSelectElement
-    const batchId = target.value
-
-    const assignmentResponse = await fetch(
-      `${BASE_URL}/api/extension/batches/${batchId}`,
-    )
-    const assignments = (await assignmentResponse.json()) as {
-      id: string
-      name: string
-    }[]
-
-    assignmentSelect.classList.remove("d-none")
-    assignmentSelect.innerHTML = ""
-
-    const defaultopt = document.createElement("option")
-    defaultopt.value = ""
-    defaultopt.textContent = "Select Assignment"
-    defaultopt.selected = true
-    defaultopt.disabled = true
-
-    assignmentSelect.appendChild(defaultopt)
-
-    for (const assignment of assignments) {
-      const assOpt = document.createElement("option")
-      assOpt.value = assignment.id
-      assOpt.textContent = assignment.name
-
-      assignmentSelect?.appendChild(assOpt)
-    }
-  })
-
-  assignmentSelect.addEventListener("change", async (e: Event) => {
-    const cloudList = document.getElementById("cloud-jsons")
-    cloudList.innerHTML = ""
-
-    const target = e.target as HTMLSelectElement
-    const assignmentId = target.value
-    const batchId = batchSelect.value
-
-    const assignmentJsonResponse = await fetch(
-      `${BASE_URL}/api/extension/assignments/${batchId}/${assignmentId}`,
-    )
-    const jsons = (await assignmentJsonResponse.json()) as {
-      data: string
-      assignment: { name: string }
-      batch: { name: string }
-      user: { name: string }
-      category: string
-    }[]
-
-    for (const jsonIndex in jsons) {
-      const json = jsons[Number(jsonIndex)]
-      const jsonContainer = document.createElement("div")
-      jsonContainer.style.display = "flex"
-      jsonContainer.style.gap = "5px"
-      jsonContainer.style.padding = "5px"
-      jsonContainer.style.alignItems = "center"
-
-      if (Number(jsonIndex) % 2 === 0) {
-        jsonContainer.style.backgroundColor = "#f2f2f2"
-      }
-
-      const filename = kebabCase(
-        `${json.batch.name} ${json.assignment.name} ${
-          json.category ? `category ${json.category}` : ""
-        }`,
-      )
-
-      const title = document.createElement("span")
-      title.textContent = filename
-
-      const downloadButton = getButton("Load")
-      downloadButton.style.marginLeft = "auto"
-      downloadButton.style.backgroundColor = "#6807ff"
-      downloadButton.style.color = "#fff"
-      downloadButton.addEventListener("click", () => {
-        appendJson(json.data, filename)
-      })
-
-      jsonContainer.appendChild(title)
-      jsonContainer.appendChild(downloadButton)
-
-      cloudList?.append(jsonContainer)
-    }
-  })
 
   renderList()
   enableJsonLoader()
 }
 
-const getJsons = () => {
-  const jsonsData = localStorage.getItem("assignment-jsons")
-  const jsons: Array<JsonData> = jsonsData ? JSON.parse(jsonsData) : []
-
-  return jsons
-}
-
-const renderList = async () => {
-  const currentJsonData = localStorage.getItem("assignment-data")
-  const jsons = getJsons()
-
-  const currentJson: JsonData = currentJsonData
-    ? JSON.parse(currentJsonData)
-    : { filename: "null" }
-
+const renderList = () => {
   const jsonList = document.querySelector("#json-list")
+  if (!jsonList) return
+
+  const jsons = getJsons()
+  const activeFilename = getActiveFilename()
+
   jsonList.innerHTML = ""
 
-  for (const jsonIndex in jsons) {
-    const json = jsons[Number(jsonIndex)]
-    const jsonContainer = document.createElement("div")
-    jsonContainer.style.display = "flex"
-    jsonContainer.style.gap = "5px"
-    jsonContainer.style.padding = "5px"
+  const count = document.querySelector("#json-count")
+  if (count) count.textContent = String(jsons.length)
 
-    if (Number(jsonIndex) % 2 === 0) {
-      jsonContainer.style.backgroundColor = "#f2f2f2"
-    }
+  if (jsons.length === 0) {
+    const empty = document.createElement("div")
+    empty.className = "ac-empty"
+    empty.textContent = "Nothing loaded yet"
+    jsonList.append(empty)
+    return
+  }
+
+  for (const json of jsons) {
+    const isActive = activeFilename === json.filename
+
+    const jsonContainer = document.createElement("div")
+    jsonContainer.className = isActive ? "ac-row is-active" : "ac-row"
 
     const title = document.createElement("span")
+    title.className = "ac-row__name"
     title.textContent = json.filename
+    title.title = json.filename
 
     const activeButton = getButton(
-      currentJson.filename === json.filename ? "Active" : "Activate",
+      isActive ? "Active" : "Activate",
+      isActive ? "ac-btn ac-btn--on" : "ac-btn",
     )
-    activeButton.style.backgroundColor =
-      currentJson.filename === json.filename ? "#6807ff" : "#dddddd"
-    activeButton.style.color =
-      currentJson.filename === json.filename ? "white" : "black"
-    activeButton.style.marginLeft = "auto"
 
-    const removeButton = getButton("×")
-    removeButton.style.backgroundColor = "#dddddd"
-    removeButton.style.marginLeft = "5px"
+    const removeButton = getButton("×", "ac-btn ac-btn--x")
+    removeButton.title = `Remove ${json.filename}`
 
-    activeButton.addEventListener("click", () => {
-      localStorage.setItem("assignment-data", JSON.stringify(json))
-      renderList()
-    })
-
-    removeButton.addEventListener("click", () => {
-      const filtered = jsons.filter((j) => json.filename !== j.filename)
-      localStorage.setItem("assignment-jsons", JSON.stringify(filtered))
-      renderList()
-    })
+    activeButton.addEventListener("click", () => activateJson(json))
+    removeButton.addEventListener("click", () => removeJson(json.filename))
 
     jsonContainer.appendChild(title)
     jsonContainer.appendChild(activeButton)
     jsonContainer.appendChild(removeButton)
 
-    jsonList?.append(jsonContainer)
+    jsonList.append(jsonContainer)
   }
 }
 
@@ -238,35 +105,20 @@ export const enableJsonLoader = () => {
 
   if (!el) return
 
-  el.addEventListener("change", (e: Event) => {
+  el.addEventListener("change", async (e: Event) => {
     const input = e.target as HTMLInputElement
-    const reader = new FileReader()
+    const files = input.files ? Array.from(input.files) : []
 
-    reader.onload = () => {
-      const filename = input.files ? input.files[0].name : null
+    if (files.length === 0) return
 
-      if (!filename) return
-      const data = reader.result as string
-      appendJson(data, filename)
-    }
+    const rejected = await addJsonFiles(files)
+    input.value = ""
 
-    if (input.files && input.files.length > 0) {
-      reader.readAsText(input.files[0])
+    if (rejected.length > 0) {
+      showNotice(`Not valid JSON: ${rejected.join(", ")}`, "error")
     }
   })
 }
 
-const appendJson = (data: string, filename: string) => {
-  const jsonsData = localStorage.getItem("assignment-jsons")
-  const jsons: Array<JsonData> = jsonsData ? JSON.parse(jsonsData) : []
-
-  const filtered = jsons.filter((json) => json.filename !== filename)
-  const jsonData = { filename, data: JSON.parse(data) }
-
-  filtered.push(jsonData)
-
-  localStorage.setItem("assignment-jsons", JSON.stringify(filtered))
-  localStorage.setItem("assignment-data", JSON.stringify(jsonData))
-
-  renderList()
-}
+// the tools rail writes to the same store, so the panel follows along
+subscribeToJsons(renderList)

@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # lifecycle scripts stay off: they are the injection point for the
+      # config-file malware campaigns that target this ecosystem
+      - name: Install
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build
+        run: bun run build
+
+      - name: Name the zip after the tag
+        run: cp build/chrome-mv3-prod.zip "assignment-checker-${GITHUB_REF_NAME}.zip"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: assignment-checker-*.zip
+          generate_release_notes: true

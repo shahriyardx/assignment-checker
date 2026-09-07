@@ -1,107 +1,101 @@
+import type React from "react"
+
 import { useExtensionSettings } from "@/hooks"
-import React from "react"
-import { debounce } from "lodash"
-import { getKeymap } from "@/utils"
+import { DEFAULT_SHORTCUTS, type Keymap, type ShortcutName } from "@/utils"
+import ShortcutInput from "../components/ShortcutInput"
+import Toggle from "../components/Toggle"
+
+const SHORTCUT_NAMES: ShortcutName[] = [
+  "openAssignmentShortcut",
+  "showFeedbackBuilder",
+  "insertFeedbackShortcut",
+  "submitMarksShortcut",
+]
+
+const Label = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="flex items-center gap-2.5 mb-3 text-[9px] font-bold tracking-[0.16em] uppercase text-[#6b7280] after:content-[''] after:flex-1 after:h-px after:bg-[#e3e6eb]">
+    {children}
+  </h2>
+)
 
 const Home = () => {
-  const { settings, updateSettings } = useExtensionSettings()
+  const { settings, updateSettings, loading } = useExtensionSettings()
 
-  const handleKeymapChange = (event: KeyboardEvent, key: string) => {
-    event.preventDefault()
-
-    const handler = debounce(() => {
-      const keyMap = getKeymap(event)
-      updateSettings({ [key]: keyMap })
-    }, 500)
-
-    handler()
+  if (loading) {
+    return <p className="text-[11px] text-[#6b7280]">Loading settings…</p>
   }
 
+  // a combo assigned to two actions would make one of them unreachable
+  const assigned = SHORTCUT_NAMES.map(
+    (name) => settings[name]?.text ?? DEFAULT_SHORTCUTS[name],
+  )
+  const duplicates = new Set(
+    assigned.filter((text, index) => assigned.indexOf(text) !== index),
+  )
+
   return (
-    <div>
-      <h1 className="text-xl font-bold border-b border-b-zinc-500">Settings</h1>
-      <form className="mt-2 flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <input
+    <div className="flex flex-col gap-6">
+      <section>
+        <Label>Behaviour</Label>
+        <div className="flex flex-col gap-3">
+          <Toggle
+            id="copy_marks"
+            label="Copy marks to clipboard"
             checked={settings.copyMarks}
-            onChange={(event) =>
-              updateSettings({ copyMarks: event.target.checked })
-            }
-            id="copy_marks"
-            type="checkbox"
+            onChange={(checked) => updateSettings({ copyMarks: checked })}
           />
-          <label htmlFor="copy_marks">Copy marks to clipboard</label>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <input
-            checked={settings.openLinks}
-            onChange={(event) =>
-              updateSettings({ openLinks: event.target.checked })
-            }
+          <Toggle
             id="open_links"
-            type="checkbox"
+            label="Open submission links automatically"
+            checked={settings.openLinks}
+            onChange={(checked) => updateSettings({ openLinks: checked })}
           />
-          <label htmlFor="open_links">Automatically Open Links</label>
+        </div>
+      </section>
+
+      <section>
+        <Label>Shortcuts</Label>
+        <div className="flex flex-col gap-2.5">
+          {SHORTCUT_NAMES.map((name) => (
+            <ShortcutInput
+              key={name}
+              name={name}
+              value={settings[name]}
+              conflict={duplicates.has(
+                settings[name]?.text ?? DEFAULT_SHORTCUTS[name],
+              )}
+              onChange={(keymap: Keymap | null) =>
+                updateSettings({ [name]: keymap ?? undefined })
+              }
+            />
+          ))}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="copy_marks">Assignment Open Shortcut</label>
-          <input
-            id="copy_marks"
-            type="text"
-            onKeyDown={(event) =>
-              // @ts-expect-error: unknown TODO: Fix type later
-              handleKeymapChange(event, "openAssignmentShortcut")
-            }
-            value={settings.openAssignmentShortcut?.text || ""}
-            className="px-3 py-2 rounded-md border-none bg-zinc-600"
-          />
-        </div>
+        {duplicates.size > 0 && (
+          <p className="mt-3 text-[10px] text-[#b91c1c]">
+            Two actions share a shortcut. Only one of them will fire.
+          </p>
+        )}
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="show_builder">Show Feedback Builder</label>
-          <input
-            id="show_builder"
-            type="text"
-            onKeyDown={(event) =>
-              // @ts-expect-error: unknown TODO: Fix type later
-              handleKeymapChange(event, "showFeedbackBuilder")
-            }
-            value={settings.showFeedbackBuilder?.text || ""}
-            className="px-3 py-2 rounded-md border-none bg-zinc-600"
-          />
-        </div>
+        <p className="mt-3 text-[10px] text-[#6b7280]">
+          Click a shortcut, then press the keys. Esc cancels.
+        </p>
+      </section>
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="insert_feedback">Insert Feedback Shortcut</label>
-          <input
-            id="insert_feedback"
-            type="text"
-            onKeyDown={(event) => {
-              // @ts-expect-error: unknown TODO: Fix type later
-              handleKeymapChange(event, "insertFeedbackShortcut")
-            }}
-            value={settings.insertFeedbackShortcut?.text || ""}
-            className="px-3 py-2 rounded-md border-none bg-zinc-600"
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label htmlFor="submit_marks">Submit Marks Shortcut</label>
-          <input
-            id="submit_marks"
-            type="text"
-            onKeyDown={(event) => {
-              // TODO: Fix type later
-              // @ts-expect-error: unknown
-              handleKeymapChange(event, "submitMarksShortcut")
-            }}
-            value={settings.submitMarksShortcut?.text || ""}
-            className="px-3 py-2 rounded-md border-none bg-zinc-600"
-          />
-        </div>
-      </form>
+      <section>
+        <Label>Loader</Label>
+        <p className="text-[10px] text-[#6b7280]">
+          Press{" "}
+          <kbd className="px-1.5 py-0.5 text-[10px] rounded border border-[#d2d7df] bg-white">
+            Shift
+          </kbd>{" "}
+          +{" "}
+          <kbd className="px-1.5 py-0.5 text-[10px] rounded border border-[#d2d7df] bg-white">
+            \
+          </kbd>{" "}
+          on the dashboard to load JSON files.
+        </p>
+      </section>
     </div>
   )
 }

@@ -1,7 +1,8 @@
+import { showNotice } from "./notice"
 import type {
   AssignmentData,
-  Json,
   JSONDATA,
+  Json,
   OldJson,
   Requirement,
   SubRequirement,
@@ -64,17 +65,36 @@ const legacyToNew = (json: { [key: string]: any }) => {
   return data
 }
 
-export const getJsonData = () => {
-  const data = localStorage.getItem("assignment-data") as string
-  const assignmentJson = JSON.parse(data) as AssignmentData
+/**
+ * Reads the active JSON out of localStorage. Returns null (and tells the user)
+ * when nothing is loaded or the stored value is not usable, so callers never
+ * blow up on a missing or corrupt entry.
+ */
+export const getJsonData = (): JSONDATA | null => {
+  const data = localStorage.getItem("assignment-data")
 
-  const assignmentData = assignmentJson.data
-
-  if (assignmentData.type === "new") {
-    return assignmentData as JSONDATA
+  if (!data) {
+    showNotice("No JSON loaded. Press Shift + \\ to open the loader.", "error")
+    return null
   }
 
-  if (assignmentData.type === "code") {
+  let assignmentJson: AssignmentData
+
+  try {
+    assignmentJson = JSON.parse(data) as AssignmentData
+  } catch {
+    showNotice("The active JSON is corrupt. Load it again.", "error")
+    return null
+  }
+
+  const assignmentData = assignmentJson?.data
+
+  if (!assignmentData) {
+    showNotice("The active JSON has no data.", "error")
+    return null
+  }
+
+  if (assignmentData.type === "new") {
     return assignmentData as JSONDATA
   }
 
@@ -83,39 +103,49 @@ export const getJsonData = () => {
 
 export const openFirstAssignment = (callback?: CallableFunction) => {
   if (document.querySelector(".assignment-evaluation-form")) return
+
   const assignment = document.querySelector(
     ".btn.btn-icon.btn-eye-icon",
-  ) as HTMLButtonElement
+  ) as HTMLButtonElement | null
 
-  if (assignment) {
-    assignment.click()
-    callback()
+  if (!assignment) {
+    showNotice("No assignment found to open on this page.", "error")
+    return
   }
+
+  assignment.click()
+  callback?.()
 }
 
 export const getSubmissionText = () => {
-  const rawSubmission = document.getElementsByClassName(
-    "col-12 col-md-11",
-  ) as HTMLCollection
+  const rawSubmission = document.getElementsByClassName("col-12 col-md-11")
+  const last = rawSubmission[rawSubmission.length - 1] as
+    | HTMLElement
+    | undefined
 
-  // @ts-expect-error
-  const studentSubmisson = rawSubmission[rawSubmission.length - 1].innerText
-  return studentSubmisson
+  return last?.innerText ?? ""
 }
 
 export const getSubmittionLinks = (text: string) => {
   const linkRegex =
-    /(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9]\.)+[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9](?:\/[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)?/gi
+    /(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9]\.)+[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9](?:\/[-a-zA-Z0-9()@:%_+.~#?&/=]*)?/gi
 
-  const links = text
-    .match(linkRegex)
-    .map((link) => (link.startsWith("http") ? link : `https://${link}`))
+  const matches = text.match(linkRegex)
+  if (!matches) return []
 
-  return links
+  return matches.map((link) =>
+    link.startsWith("http") ? link : `https://${link}`,
+  )
 }
 
 export const openLinks = () => {
   const links = getSubmittionLinks(getSubmissionText())
+
+  if (links.length === 0) {
+    showNotice("No links found in this submission.")
+    return
+  }
+
   for (const link of links) {
     window.open(link, "_blank", "noopener,noreferrer")
   }
@@ -129,12 +159,10 @@ export const submitMarks = () => {
       btn.textContent === "Update",
   )
 
-  if (submitButton) {
-    submitButton.click()
+  if (!submitButton) {
+    showNotice("No submit button found on this page.", "error")
+    return
   }
-}
 
-export const BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? "https://json-hub.shahriyar.dev"
-    : "https://json-hub.shahriyar.dev"
+  submitButton.click()
+}

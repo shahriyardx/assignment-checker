@@ -1,12 +1,6 @@
 import { getSettings } from "@/hooks"
 import { getCustomFeedback, getInputChecked } from "./html_helper"
-import type {
-  BaseRequirement,
-  CodeJson,
-  Json,
-  JSONDATA,
-  Requirement,
-} from "./types"
+import type { BaseRequirement, JSONDATA, Json, Requirement } from "./types"
 import { getJsonData } from "./utils"
 
 const feedbackFooter = `<strong>Important Instructions:</strong> 
@@ -50,6 +44,7 @@ const getHighestMark = (submittedMark: number, jsonData: JSONDATA) => {
     if (badge) {
       highestMark = Number.parseInt(
         document.querySelector(".badge")?.textContent as string,
+        10,
       )
     } else {
       highestMark = submittedMark
@@ -59,27 +54,13 @@ const getHighestMark = (submittedMark: number, jsonData: JSONDATA) => {
   return highestMark
 }
 
-export const insertFeedbackCode = (data: {
-  feedback: string
-  totalMarks: number
-}) => {
-  const jsonData = getJsonData() as CodeJson
-  const submittedMark = getSubmittedMark()
-  const highestMark = getHighestMark(submittedMark, jsonData as JSONDATA)
-
-  insertFeedbackToDom(
-    highestMark,
-    submittedMark,
-    data.totalMarks,
-    data.feedback,
-  )
-}
-
 export const insertFeedback = async () => {
   const insertBtn = document.getElementById("insert-button")
   if (!insertBtn) return
 
-  const jsonData = getJsonData() as Json
+  const jsonData = getJsonData() as Json | null
+  if (!jsonData?.sections) return
+
   const sections = jsonData.sections
   const submittedMark = getSubmittedMark()
   const highestMark = getHighestMark(submittedMark, jsonData as JSONDATA)
@@ -96,7 +77,7 @@ export const insertFeedback = async () => {
     for (const reqIndex in section.requirements) {
       globalIndex += 1
       const req = section.requirements[reqIndex] as Requirement
-      const reqId = `${Number.parseInt(sectionIndex)}_${Number.parseInt(reqIndex)}`
+      const reqId = `${Number.parseInt(sectionIndex, 10)}_${Number.parseInt(reqIndex, 10)}`
       const reqCorrect = getInputChecked(reqId)
 
       if (!reqCorrect) {
@@ -117,9 +98,10 @@ export const insertFeedback = async () => {
         const subRequirements = req.subRequirements as BaseRequirement[]
         for (const subReqIndex in subRequirements) {
           const subReq = subRequirements[subReqIndex]
-          const subReqId = `${Number.parseInt(sectionIndex)}_${Number.parseInt(
+          const subReqId = `${Number.parseInt(sectionIndex, 10)}_${Number.parseInt(
             reqIndex,
-          )}_${Number.parseInt(subReqIndex)}`
+            10,
+          )}_${Number.parseInt(subReqIndex, 10)}`
 
           const subReqCorrect = getInputChecked(subReqId)
 
@@ -173,7 +155,10 @@ const insertFeedbackToDom = async (
   const settings = await getSettings()
 
   if (settings.copyMarks) {
-    window.navigator.clipboard.writeText(String(obtainedMark))
+    // clipboard access is refused when the page is not focused
+    await window.navigator.clipboard
+      .writeText(String(obtainedMark))
+      .catch(() => {})
   }
 
   const textArea = document.querySelector(".ql-editor p")
@@ -181,8 +166,10 @@ const insertFeedbackToDom = async (
     textArea.innerHTML = `${feedback}\n\n${feedbackFooter}`
   }
 
-  const markBox = document.querySelector("#Mark") as HTMLInputElement
+  const markBox = document.querySelector("#Mark") as HTMLInputElement | null
   const suggestion = document.querySelector("#markSuggestions")
+
+  if (!markBox) return
 
   markBox.focus()
 

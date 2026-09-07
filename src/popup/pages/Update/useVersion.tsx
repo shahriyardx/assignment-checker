@@ -1,30 +1,36 @@
-import { getCurrentVersion, getLatestVersionInfo } from "@/utils"
 import { useCallback, useEffect, useState } from "react"
+
+import { getCurrentVersion, getLatestVersionInfo } from "@/utils"
 
 export type VersionInfo = {
   latestVersion: string | null
   changelog: string | null
+  currentVersion: string | null
+  error: string | null
   loading: boolean
-  currentVersion: string
-  lastUpdateCheck?: Date
+  lastUpdateCheck: Date | null
 }
 
 const useVersion = () => {
   const [versionInfo, setVersionInfo] = useState<VersionInfo>({
     latestVersion: null,
     changelog: null,
-    loading: true,
     currentVersion: null,
+    error: null,
+    loading: true,
+    lastUpdateCheck: null,
   })
 
   const getUpdateInfo = useCallback(async () => {
-    const { latestVersion, changelog } = await getLatestVersionInfo()
+    const { latestVersion, changelog, error } = await getLatestVersionInfo()
 
     setVersionInfo({
       currentVersion: getCurrentVersion(),
-      latestVersion: latestVersion,
+      latestVersion,
       changelog,
+      error,
       loading: false,
+      lastUpdateCheck: new Date(),
     })
   }, [])
 
@@ -32,7 +38,7 @@ const useVersion = () => {
     getUpdateInfo()
   }, [getUpdateInfo])
 
-  return { ...versionInfo }
+  return { ...versionInfo, refresh: getUpdateInfo }
 }
 
 export default useVersion

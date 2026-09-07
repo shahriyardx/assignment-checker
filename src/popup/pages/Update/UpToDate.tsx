@@ -1,27 +1,33 @@
 import moment from "moment"
-import React from "react"
+
 import type { VersionInfo } from "./useVersion"
 
-const UpToDate = ({
-  versionInfo,
-}: {
-  versionInfo: VersionInfo
-}) => {
-  const { latestVersion, lastUpdateCheck } = versionInfo
+const UpToDate = ({ versionInfo }: { versionInfo: VersionInfo }) => {
+  const { currentVersion, lastUpdateCheck } = versionInfo
 
   return (
-    <div className="flex flex-col h-full">
-      <h3 className="text-lg font-semibold">Already up to date ⚡️</h3>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a]" />
+        <h2 className="text-[11px] font-bold tracking-[0.12em] uppercase">
+          Up to date
+        </h2>
+      </div>
 
-      <p className="mt-2">
-        <span className="text-white">Current Version:</span> {
-          latestVersion
-        }{" "}
-      </p>
-      <p>
-        <span className="text-white">Last Update Check:</span>{" "}
-        {moment(lastUpdateCheck).format("MMM Do, YYYY, h:mm A")}
-      </p>
+      <dl className="flex flex-col gap-1.5 text-[11px]">
+        <div className="flex justify-between gap-3">
+          <dt className="text-[#6b7280]">Installed</dt>
+          <dd>{currentVersion}</dd>
+        </div>
+        <div className="flex justify-between gap-3">
+          <dt className="text-[#6b7280]">Last checked</dt>
+          <dd>
+            {lastUpdateCheck
+              ? moment(lastUpdateCheck).format("MMM Do, h:mm A")
+              : "—"}
+          </dd>
+        </div>
+      </dl>
     </div>
   )
 }

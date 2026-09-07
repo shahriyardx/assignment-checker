@@ -1,14 +1,9 @@
 import { getSettings } from "@/hooks"
+import { DEFAULT_SHORTCUTS, getKeymap } from "@/utils"
 import { insertFeedback } from "./feedback"
 import { showFeedbackBuilder } from "./html_helper"
 import { showJsonLoader } from "./loader"
-import {
-  getSubmissionText,
-  getSubmittionLinks,
-  openFirstAssignment,
-  openLinks,
-} from "./utils"
-import { getKeymap } from "@/utils"
+import { openFirstAssignment, openLinks } from "./utils"
 
 const handleKeyDown = async (event: KeyboardEvent) => {
   if (event.shiftKey && event.code === "Backslash") {
@@ -20,10 +15,16 @@ const handleKeyDown = async (event: KeyboardEvent) => {
   const keymap = getKeymap(event)
   const mapText = keymap.text
 
-  const openShortCut = settings.openAssignmentShortcut?.text || "Shift + O"
-  const insertShortCut = settings.insertFeedbackShortcut?.text || "Shift + }"
-  const submitShortcut = settings.submitMarksShortcut?.text || "Shift + Enter"
-  const showBuilder = settings.showFeedbackBuilder?.text || "]"
+  const openShortCut =
+    settings.openAssignmentShortcut?.text ||
+    DEFAULT_SHORTCUTS.openAssignmentShortcut
+  const insertShortCut =
+    settings.insertFeedbackShortcut?.text ||
+    DEFAULT_SHORTCUTS.insertFeedbackShortcut
+  const submitShortcut =
+    settings.submitMarksShortcut?.text || DEFAULT_SHORTCUTS.submitMarksShortcut
+  const showBuilder =
+    settings.showFeedbackBuilder?.text || DEFAULT_SHORTCUTS.showFeedbackBuilder
 
   if (mapText === openShortCut) {
     openFirstAssignment(() => {
